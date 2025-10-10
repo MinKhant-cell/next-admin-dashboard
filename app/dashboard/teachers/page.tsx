@@ -1,4 +1,4 @@
-import TeacherList from '@/components/dashboard/teachers-list';
+import TeacherList from '@/components/dashboard/teachers';
 import { redirect } from 'next/navigation';
 import { getUserDetails, getUser } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';

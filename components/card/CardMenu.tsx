@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { AiOutlineShop } from 'react-icons/ai';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsThreeDots, BsThreeDotsVertical } from 'react-icons/bs';
 import { FiSettings } from 'react-icons/fi';
 import { TiLightbulb } from 'react-icons/ti';
 
@@ -32,10 +32,10 @@ function CardMenu(props: { transparent?: boolean; vertical?: boolean }) {
           >
             {vertical ? (
               <p className="text-2xl hover:cursor-pointer">
-                <BsThreeDots />
+                <BsThreeDotsVertical />
               </p>
             ) : (
-              <BsThreeDots className="h-6 w-6" />
+              <BsThreeDotsVertical className="h-6 w-6" />
             )}
           </Button>
         </DropdownMenuTrigger>

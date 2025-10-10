@@ -1,4 +1,4 @@
-import DepartmentsCreate from '@/components/dashboard/departments/create';
+import DepartmentsCreate from '@/components/dashboard/departments/components/CreateDepartmentSheet';
 import { redirect } from 'next/navigation';
 import { getUserDetails, getUser, getDepartments } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';

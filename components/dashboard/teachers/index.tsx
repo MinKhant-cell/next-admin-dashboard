@@ -2,16 +2,20 @@
 'use client';
 
 import MainChart from '@/components/dashboard/main/cards/MainChart';
-import MainDashboardTable from '@/components/dashboard/main/cards/MainDashboardTable';
+import TeacherTable from '@/components/dashboard/teachers/components/TeacherTable';
 import DashboardLayout from '@/components/layout';
+import { Button } from '@/components/ui/button';
 import tableDataUserReports from '@/variables/tableDataUserReports';
 import { User } from '@supabase/supabase-js';
+import Link from 'next/link';
+import { LuCircleFadingPlus } from 'react-icons/lu';
 interface Props {
   user: User | null | undefined;
   userDetails: { [x: string]: any } | null | any;
 }
 
 export default function Page(props: Props) {
+  const {user, userDetails} = props
   return (
     <DashboardLayout
       user={props.user}
@@ -20,10 +24,17 @@ export default function Page(props: Props) {
       description="Manage your subscriptions"
     >
       <div className="h-full w-full">
-        
+        <div className="flex justify-end mb-3">
+          <Link href={'/dashboard/teachers/create'}>
+          <Button variant="outline" size="sm">
+          <LuCircleFadingPlus className="mr-1" /> Add Teacher
+        </Button>
+          </Link>
+          
+        </div>
         {/* Conversion and talbes*/}
         <div className="h-full w-full rounded-lg ">
-          <MainDashboardTable tableData={tableDataUserReports} />
+          <TeacherTable tableData={[]}/>
         </div>
       </div>
     </DashboardLayout>

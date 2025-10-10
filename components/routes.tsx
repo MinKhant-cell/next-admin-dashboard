@@ -29,7 +29,7 @@ export const routes: IRoute[] = [
   },
    {
     name: 'Teachers List',
-    path: '/dashboard/teachers-list',
+    path: '/dashboard/teachers',
     icon: <HiOutlineUsers className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },

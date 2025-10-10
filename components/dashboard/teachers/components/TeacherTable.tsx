@@ -34,7 +34,11 @@ type RowObj = {
   checked?: string;
   id: number;
   name: string;
-  description: string;
+  email: string;
+  phone_number: string;
+  specialization: string;
+  gender: string;
+  status: string;
   created_at: string;
   menu?: string;
 };
@@ -48,27 +52,25 @@ function CheckTable(props: { tableData: any }) {
   const [globalFilter, setGlobalFilter] = React.useState('');
   const createPages = (count: number) => {
     let arrPageCount = [];
-
     for (let i = 1; i <= count; i++) {
       arrPageCount.push(i);
     }
-
     return arrPageCount;
   };
   const columns = [
-    // columnHelper.accessor('checked', {
-    //   id: 'checked',
-    //   header: () => (
-    //     <div className="flex max-w-max items-center">
-    //       <Checkbox />
-    //     </div>
-    //   ),
-    //   cell: (info: any) => (
-    //     <div className="flex max-w-max items-center">
-    //       <Checkbox defaultChecked={info.getValue()} />
-    //     </div>
-    //   )
-    // }),
+    columnHelper.accessor('checked', {
+      id: 'checked',
+      header: () => (
+        <div className="flex max-w-max items-center">
+          <Checkbox />
+        </div>
+      ),
+      cell: (info: any) => (
+        <div className="flex max-w-max items-center">
+          <Checkbox defaultChecked={info.getValue()} />
+        </div>
+      )
+    }),
     columnHelper.accessor('id', {
       id: 'id',
       header: () => (
@@ -95,11 +97,71 @@ function CheckTable(props: { tableData: any }) {
         </p>
       )
     }),
-    columnHelper.accessor('description', {
-      id: 'description',
+    columnHelper.accessor('email', {
+      id: 'email',
       header: () => (
         <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          Description
+          Email
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full items-center gap-[14px]">
+          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('phone_number', {
+      id: 'phone_number',
+      header: () => (
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Phone Number
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full items-center gap-[14px]">
+          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('gender', {
+      id: 'gender',
+      header: () => (
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Gender
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full items-center gap-[14px]">
+          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('specialization', {
+      id: 'specialization',
+      header: () => (
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Specialization
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full items-center gap-[14px]">
+          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('status', {
+      id: 'status',
+      header: () => (
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Status
         </p>
       ),
       cell: (info: any) => (
