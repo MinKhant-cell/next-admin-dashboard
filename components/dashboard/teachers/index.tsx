@@ -33,24 +33,12 @@ export default function Page(props: Props) {
           <LuCircleFadingPlus className="mr-1" /> Add Teacher
         </Button>
           </Link>
-
-          <Button
-      variant="outline"
-      onClick={() =>
-       toast.success('Event has been created')
-
-      }
-    >
-      Show Toast
-    </Button>
-          
         </div>
         {/* Conversion and talbes*/}
         <div className="h-full w-full rounded-lg ">
           <TeacherTable tableData={teachers || []}/>
         </div>
       </div>
-      <Toaster position="top-right"/>
     </DashboardLayout>
   );
 }

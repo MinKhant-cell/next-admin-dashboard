@@ -1,4 +1,4 @@
-import StudentsList from '@/components/dashboard/students-list';
+import ClassCreatePage from '@/components/dashboard/classes/create';
 import { redirect } from 'next/navigation';
 import { getUserDetails, getUser } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
@@ -14,5 +14,5 @@ export default async function Account() {
     return redirect('/dashboard/signin');
   }
 
-  return <StudentsList user={user} userDetails={userDetails} />;
+  return <ClassCreatePage user={user} userDetails={userDetails} />;
 }

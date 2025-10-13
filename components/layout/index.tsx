@@ -23,6 +23,7 @@ interface Props {
 
 const DashboardLayout: React.FC<Props> = (props: Props) => {
   const pathname = usePathname();
+  console.log(getActiveRoute(routes, pathname))
   const [open, setOpen] = React.useState(false);
 
   return (

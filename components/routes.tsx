@@ -11,7 +11,8 @@ import {
   HiOutlineCurrencyDollar,
   HiOutlineUserCircle,
   HiOutlineUserPlus,
-  HiOutlineBuildingOffice
+  HiOutlineBuildingOffice,
+  HiOutlineBookOpen
 } from 'react-icons/hi2';
 
 export const routes: IRoute[] = [
@@ -23,7 +24,7 @@ export const routes: IRoute[] = [
   },
    {
     name: 'Students List',
-    path: '/dashboard/students-list',
+    path: '/dashboard/students',
     icon: <HiOutlineUserPlus className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
@@ -31,6 +32,12 @@ export const routes: IRoute[] = [
     name: 'Teachers List',
     path: '/dashboard/teachers',
     icon: <HiOutlineUsers className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    collapse: false
+  },
+  {
+    name: 'Classes List',
+    path: '/dashboard/classes',
+    icon: <HiOutlineBookOpen className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
   {
