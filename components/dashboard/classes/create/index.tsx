@@ -38,6 +38,7 @@ import { ClassSettingsForm  } from '../components/ClassSettingsForm';
 interface Props {
   user: User | null | undefined;
   userDetails: { [x: string]: any } | null | any;
+  teachers: null | any;
 }
 
 type ClassFormValues = {
@@ -55,7 +56,7 @@ type ClassFormValues = {
 };
 
 export default function Page(props: Props) {
-  const { user, userDetails } = props;
+  const { user, userDetails, teachers } = props;
   const router = useRouter();
   const methods = useForm<ClassFormValues>();
   const {
@@ -150,7 +151,7 @@ export default function Page(props: Props) {
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {step === 1 && <ClassInformationForm errors={errors} />}
+                    {step === 1 && <ClassInformationForm teachers={teachers} errors={errors} />}
                     {step === 2 && <ClassSettingsForm errors={errors} />}
                     {step === 3 && <ClassReviewForm data={formData} />}
                   </motion.div>

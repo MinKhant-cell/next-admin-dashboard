@@ -3,15 +3,19 @@ import { redirect } from 'next/navigation';
 import { getUserDetails, getUser } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
 import { FetchClasses } from '@/components/dashboard/classes/hooks/useClass';
+import { FetchTeachers } from '@/components/dashboard/teachers/hooks/useTeacher';
 
-export default async function Account() {
+export default async function ClassPage() {
   const supabase = createClient();
-  const [user, userDetails, {data: classes,error: fetchClassesError}] = await Promise.all([
+  const [user, userDetails, ] = await Promise.all([
     getUser(supabase),
     getUserDetails(supabase),
-    FetchClasses()
   ]);
 
+  const {data: classes,error: fetchClassesError} = await FetchClasses()
+
+  console.log("claseerer")
+  console.log(classes)
   if (!user) {
     return redirect('/dashboard/signin');
   }

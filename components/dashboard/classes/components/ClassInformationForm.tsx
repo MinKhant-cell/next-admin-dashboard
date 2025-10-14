@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-export function ClassInformationForm({ errors }: any) {
+export function ClassInformationForm({ errors, teachers }: any) {
   const { register, control, trigger } = useFormContext();
   
   const teacher_id = useController({
@@ -26,12 +26,13 @@ export function ClassInformationForm({ errors }: any) {
       control,
       rules: { required: 'Teacher is required' }
     });
-  
-    const teachers = [
-      {id: 1, name: "Thuzar"},
-      {id: 2, name: "Win"},
-    ]
 
+    const currency = useController({
+      name: 'currency',
+      control,
+      rules: { required: 'Currency is required' }
+    });
+  
   return (
     <div className="flex flex-col gap-5">
       <div className="grid gap-2">
@@ -131,12 +132,18 @@ export function ClassInformationForm({ errors }: any) {
         <Label className="text-gray-600" htmlFor="currency">
           Currency
         </Label>
-        <Input
-          id="currency"
-          {...register('currency', {
-            required: false
-          })}
-        />
+        <Select onValueChange={currency.field.onChange} value={currency.field.value}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a Teacher" className="text-gray-600 dark:text-zinc-300" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem className="text-gray-800 dark:text-zinc-200" value="MMK">MMK</SelectItem>
+                <SelectItem className="text-gray-800 dark:text-zinc-200" value="THB">THB</SelectItem>
+                <SelectItem className="text-gray-800 dark:text-zinc-200" value="USD">USD</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         {errors.currency && (
           <p className="text-red-500 text-xs">
             {String(errors.currency.message)}

@@ -2,8 +2,8 @@ import CardMenu from '@/components/card/CardMenu';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { format, formatISO } from "date-fns";
-import { Badge } from "@/components/ui/badge"
+import { format, formatISO } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -29,19 +29,20 @@ import {
 import React from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
-import { DeleteClass } from '../hooks/useClass';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-
 
 const statusColors: Record<string, string> = {
-  upcoming: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100",
-  open: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100",
-  ongoing: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100" ,
-  full: "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100",
-  completed: "bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-100",
-  paused: "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100",
-  canceled: "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100",
+  upcoming:
+    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
+  open: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
+  ongoing:
+    'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100',
+  full: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
+  completed:
+    'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-100',
+  paused:
+    'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100',
+  canceled:
+    'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100'
 };
 
 type RowObj = {
@@ -57,9 +58,8 @@ type RowObj = {
   menu?: string;
 };
 
-
-function CheckTable(props: { tableData: any }) {
-  const { tableData } = props;
+function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
+  const { tableData, onDelete } = props;
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -72,24 +72,6 @@ function CheckTable(props: { tableData: any }) {
     }
     return arrPageCount;
   };
-const router = useRouter();
-
-
-  const handleDelete = async (id: string) => {
-    toast.success('Class deleted successfully 🎉');
-    // const confirmed = confirm("Are you sure you want to delete?")
-    // if (!confirmed) return
-    // const { error, data } = await DeleteClass(id);
-    // console.log(id)
-    // if (!error) {
-    //   toast.success('Class deleted successfully 🎉');
-    //   router.refresh();
-    // } else {
-    //   console.log(error);
-    //   toast.error('Something went wrong 😢');
-    // }
-  }
- 
 
   const columns = [
     columnHelper.accessor('checked', {
@@ -108,20 +90,20 @@ const router = useRouter();
     columnHelper.accessor('id', {
       id: 'id',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
           ID
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-medium text-zinc-950 dark:text-white">
-          {info.getValue()}
+        <p className="text-sm text-end font-medium text-zinc-950 dark:text-white">
+          {info.row.index + 1}
         </p>
       )
     }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Name
         </p>
       ),
@@ -134,63 +116,37 @@ const router = useRouter();
     columnHelper.accessor('teacher_id', {
       id: 'teacher_id',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Teacher
         </p>
       ),
       cell: (info: any) => {
-    const row = info.row.original; // get full row data
-    return (
-      <div className="flex w-full items-center gap-[14px]">
-        <p className="text-sm font-medium text-zinc-950 dark:text-white">
-          {row.teachers?.name ?? '—'}
-        </p>
-      </div>
-    );
-  }
+        const row = info.row.original;
+        return (
+          <div className="flex justify-start w-full items-center gap-[14px]">
+            <p className="text-sm font-medium text-zinc-950 dark:text-white">
+              {row.teachers?.name ?? '—'}
+            </p>
+          </div>
+        );
+      }
     }),
-    columnHelper.accessor('start_date', {
-      id: 'start_date',
-      header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          Start Date
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
-          </p>
-        </div>
-      )
-    }),
-    columnHelper.accessor('end_date', {
-      id: 'end_date',
-      header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          End Date
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
-          </p>
-        </div>
-      )
-    }),
+
     columnHelper.accessor('fees', {
       id: 'fees',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
           Fees
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex w-full items-center gap-[14px]">
+        <div className="flex w-full justify-end items-center gap-3">
           <p className="text-sm font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
+          <Badge variant="outline" className={`font-normal text-xs bg-green-200 text-green-700 border-green-200 dark:bg-green-700 dark:text-green-200`}>
+            {info.row.original.currency}
+          </Badge>
         </div>
       )
     }),
@@ -202,51 +158,89 @@ const router = useRouter();
         </p>
       ),
       cell: (info: any) => {
-    const value = info.getValue()?.toLowerCase();
-    const colorClass = statusColors[value] || "bg-zinc-100 text-zinc-800";
-    return (
-      <div className="flex w-full items-center gap-[14px]">
-        <Badge
-          variant="outline"
-          className={`${colorClass} capitalize font-medium`}
-        >
-          {value}
-        </Badge>
-      </div>
-    );
-  },
+        const value = info.getValue()?.toLowerCase();
+        const colorClass = statusColors[value] || 'bg-zinc-100 text-zinc-800';
+        return (
+          <div className="flex w-full justify-center items-center gap-[14px]">
+            <Badge
+              variant="outline"
+              className={`${colorClass} capitalize font-medium`}
+            >
+              {value}
+            </Badge>
+          </div>
+        );
+      }
+    }),
+    columnHelper.accessor('start_date', {
+      id: 'start_date',
+      header: () => (
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          Start Date
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full justify-end items-center gap-[14px]">
+          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('end_date', {
+      id: 'end_date',
+      header: () => (
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          End Date
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full justify-end items-center gap-[14px]">
+          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
     }),
     columnHelper.accessor('created_at', {
       id: 'created_at',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          CREATED
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          Created At
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex w-full items-center gap-[14px]">
+        <div className="flex justify-end w-full items-center gap-[14px]">
           <p className="text-sm font-medium text-zinc-950 dark:text-white">
             {format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')}
           </p>
         </div>
       )
     }),
-    
+
     columnHelper.accessor('menu', {
       id: 'menu',
       header: () => (
         <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400"></p>
       ),
-      cell: (info) => <ActionDropdown id={String(info.row.original.id)} onDelete={(id) => handleDelete(id)} vertical={true} />
+      cell: (info) => (
+        <ActionDropdown
+          id={String(info.row.original.id)}
+          onDelete={(id) => onDelete(id)}
+          vertical={true}
+        />
+      )
     })
   ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(() => [...defaultData]);
-  const [{ pageIndex, pageSize }, setPagination] = React.useState<
-    PaginationState
-  >({
-    pageIndex: 0,
-    pageSize: 11
-  });
+  const [data, setData] = React.useState(tableData);
+  React.useEffect(() => {
+    setData(tableData);
+  }, [tableData]);
+  const [{ pageIndex, pageSize }, setPagination] =
+    React.useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 11
+    });
 
   const pagination = React.useMemo(
     () => ({
@@ -298,7 +292,7 @@ const router = useRouter();
                       key={header.id}
                       colSpan={header.colSpan}
                       onClick={header.column.getToggleSortingHandler()}
-                      className="cursor-pointer border-zinc-200 pl-5 pr-4 pt-2 text-start dark:border-zinc-800"
+                      className="cursor-pointer border-zinc-200 pl-5 pr-4 pt-2 text-center dark:border-zinc-800"
                     >
                       {flexRender(
                         header.column.columnDef.header,
