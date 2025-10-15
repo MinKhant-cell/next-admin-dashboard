@@ -211,7 +211,7 @@ function CheckTable(props: { tableData: any }) {
           <TableBody>
             {table
               .getRowModel()
-              .rows.slice(0, 7)
+              .rows.slice(0, 10)
               .map((row) => {
                 return (
                   <TableRow
@@ -254,10 +254,10 @@ function CheckTable(props: { tableData: any }) {
               <MdChevronLeft />
             </Button>
 
-            {/* {createPages(table.getPageCount()).map((pageNumber, index) => {
+            {createPages(table.getPageCount()).map((pageNumber, index) => {
        return (
         <Button
-         className={`font-mediumflex p-0 items-center justify-center rounded-lg p-2 text-sm transition duration-200 ${
+         className={`font-mediumflex items-center justify-center rounded-lg p-2 text-sm transition duration-200 ${
           pageNumber === pageIndex + 1
            ? ''
            : 'border border-zinc-200 bg-[transparent] dark:border-zinc-800 dark:text-white'
@@ -268,7 +268,7 @@ function CheckTable(props: { tableData: any }) {
          {pageNumber}
         </Button>
        );
-      })} */}
+      })}
             <Button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}

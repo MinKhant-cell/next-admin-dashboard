@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Separator from '@/components/auth-ui/Separator';
 
-export function ClassReviewForm({ data }: any) {
+export function CourseReviewForm({ data }: any) {
   const { register } = useFormContext();
 const renderRow = (label: string, value: any) => (
     <div className="grid grid-flow-col grid-cols-4 mb-1 text-xs">

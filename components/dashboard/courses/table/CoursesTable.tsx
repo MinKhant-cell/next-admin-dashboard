@@ -311,7 +311,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
           <TableBody>
             {table
               .getRowModel()
-              .rows.slice(0, 7)
+              .rows.slice(0, 10)
               .map((row) => {
                 return (
                   <TableRow

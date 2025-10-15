@@ -4,25 +4,24 @@
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { User } from '@supabase/supabase-js';
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { UpdateClass } from '../hooks/useClass';
-import { ClassInformationForm } from '../components/ClassInformationForm';
-import { ClassReviewForm } from '../components/ClassReviewForm';
-import { ClassSettingsForm } from '../components/ClassSettingsForm';
+import { InsertCourse } from '../hooks/useCourses';
+import { CourseInformationForm } from '../components/CourseInformationForm';
+import { CourseReviewForm } from '../components/CourseReviewForm';
+import { CourseSettingsForm } from '../components/CourseSettingsForm';
+import { User } from '@supabase/supabase-js';
 
 interface Props {
   user: User | null | undefined;
   userDetails: { [x: string]: any } | null | any;
-  classValues: any | null;
   teachers: null | any;
 }
 
-type ClassFormValues = {
+type CourseType = {
   name: string;
   start_date: string;
   end_date: string;
@@ -37,20 +36,9 @@ type ClassFormValues = {
 };
 
 export default function Page(props: Props) {
-  const { user, userDetails, classValues, teachers } = props;
+  const { user, userDetails, teachers } = props;
   const router = useRouter();
-  const methods = useForm<ClassFormValues>({
-    defaultValues: {
-      name: classValues.name,
-      teacher_id: String(classValues.teacher_id),
-      start_date: classValues.start_date,
-      end_date: classValues.end_date,
-      description: classValues.description,
-      fees: classValues.fees,
-      currency: classValues.currency,
-      status: classValues.status
-    }
-  });
+  const methods = useForm<CourseType>();
   const {
     handleSubmit,
     reset,
@@ -63,16 +51,12 @@ export default function Page(props: Props) {
   const totalSteps = 3;
   const formData = watch();
 
-  function getStepFields(step: number) {
+  function getStepFields(step: number): (keyof CourseType)[] {
     switch (step) {
       case 1:
-        return ['name'];
+        return ['name','teacher_id','start_date','end_date','fees'];
       case 2:
-        return ['start_date'];
-      case 3:
-        return ['bio'];
-      case 4:
-        return ['status', 'grade', 'class_id'];
+        return ['status'];
       default:
         return [];
     }
@@ -80,18 +64,18 @@ export default function Page(props: Props) {
 
   const nextStep = async () => {
     const valid = await trigger(getStepFields(step));
-    console.log(valid);
     if (valid) setStep((prev) => Math.min(prev + 1, totalSteps));
   };
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  const handleUpdate = async (classData: ClassFormValues) => {
-    const { error, data } = await UpdateClass(classValues.id, classData);
+  const handleCreate = async (course: CourseType) => {
+    const { error, data } = await InsertCourse(course);
     if (!error) {
-      toast.success('Class updated successfully 🎉');
+      toast.success('Course created successfully 🎉');
+      reset();
       router.refresh();
-      router.push('/dashboard/classes');
+      router.push('/dashboard/courses');
     } else {
       console.log(error);
       toast.error('Something went wrong 😢');
@@ -110,10 +94,10 @@ export default function Page(props: Props) {
         <div className="h-full w-full rounded-lg ">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
             <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(handleUpdate)}>
+              <form onSubmit={handleSubmit(handleCreate)}>
                 <div className="mb-7">
                   <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-                    Edit Class
+                    Create Course
                   </h1>
                   <div className="text-sm font-medium text-gray-600 mb-1">
                     Step {step} of {totalSteps}
@@ -133,9 +117,14 @@ export default function Page(props: Props) {
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {step === 1 && <ClassInformationForm teachers={teachers} errors={errors} />}
-                    {step === 2 && <ClassSettingsForm errors={errors} />}
-                    {step === 3 && <ClassReviewForm data={formData} />}
+                    {step === 1 && (
+                      <CourseInformationForm
+                        teachers={teachers}
+                        errors={errors}
+                      />
+                    )}
+                    {step === 2 && <CourseSettingsForm errors={errors} />}
+                    {step === 3 && <CourseReviewForm data={formData} />}
                   </motion.div>
                 </AnimatePresence>
 
@@ -152,7 +141,7 @@ export default function Page(props: Props) {
                   )}
                   {step === totalSteps && (
                     <Button type="submit" className="bg-green-600 text-white">
-                      Update
+                      Submit
                     </Button>
                   )}
                 </div>

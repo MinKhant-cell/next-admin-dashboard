@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-export function ClassSettingsForm({ errors }: any) {
+export function CourseSettingsForm({ errors }: any) {
  const { register, control, trigger } = useFormContext();
    
     

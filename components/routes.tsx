@@ -35,8 +35,8 @@ export const routes: IRoute[] = [
     collapse: false
   },
   {
-    name: 'Classes List',
-    path: '/dashboard/classes',
+    name: 'Courses List',
+    path: '/dashboard/courses',
     icon: <HiOutlineBookOpen className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },

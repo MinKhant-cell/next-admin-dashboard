@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { createClient } from '@supabase/supabase-js';
 
-type Class = {
+type Course = {
   name: string;
   start_date: string;
   end_date: string;
@@ -20,14 +20,14 @@ export const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export const InsertClass = async (classData: Class) => {
-  const { data, error } = await supabase.from('classes').insert([classData]);
+export const InsertCourse = async (courseData: Course) => {
+  const { data, error } = await supabase.from('courses').insert([courseData]);
   return { data, error };
 };
 
-export const FetchClasses = async () => {
+export const FetchCourses = async () => {
   const { data, error } = await supabase
-    .from('classes')
+    .from('courses')
     .select(
       `
     id,
@@ -45,9 +45,9 @@ export const FetchClasses = async () => {
   return { data, error };
 };
 
-export const FetchClass = async (id) => {
+export const FetchCourse = async (id) => {
   const { data, error } = await supabase
-    .from('classes')
+    .from('courses')
     .select(
       `
     *,
@@ -63,12 +63,12 @@ export const FetchClass = async (id) => {
 };
 
 
-export const UpdateClass = async (id: string, classData: Class) => {
-  const { data, error, status } = await supabase.from('classes').update(classData).eq('id',id);
+export const UpdateCourse = async (id: string, courseData: Course) => {
+  const { data, error, status } = await supabase.from('courses').update(courseData).eq('id',id);
   return { data, error, status };
 };
 
-export const DeleteClass = async (id: string) => {
-  const { data, error, status } = await supabase.from('classes').delete().eq('id',id);
+export const DeleteCourse = async (id: string) => {
+  const { data, error, status } = await supabase.from('courses').delete().eq('id',id);
   return { data, error, status };
 };
