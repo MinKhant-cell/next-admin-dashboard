@@ -2,7 +2,8 @@ import CardMenu from '@/components/card/CardMenu';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { format, formatISO } from "date-fns";
+import { format, formatISO } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -11,8 +12,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { getDepartments } from '@/utils/supabase/queries';
-import { createClient } from '@/utils/supabase/server';
 import {
   PaginationState,
   createColumnHelper,
@@ -29,18 +28,39 @@ import {
 } from '@tanstack/react-table';
 import React from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import ActionDropdown from './ActionDropdown';
+import Link from 'next/link';
+
+const statusColors: Record<string, string> = {
+  active:
+    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
+  open: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
+  ongoing:
+    'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100',
+  full: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
+  completed:
+    'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-100',
+  paused:
+    'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100',
+  resigned:
+    'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100'
+};
 
 type RowObj = {
   checked?: string;
   id: number;
   name: string;
-  description: string;
+  email: string;
+  personal_email: string;
+  phone_number: string;
+  specialization: string;
+  status: string;
   created_at: string;
   menu?: string;
 };
 
-function CheckTable(props: { tableData: any }) {
-  const { tableData } = props;
+function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
+  const { tableData, onDelete } = props;
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -48,99 +68,183 @@ function CheckTable(props: { tableData: any }) {
   const [globalFilter, setGlobalFilter] = React.useState('');
   const createPages = (count: number) => {
     let arrPageCount = [];
-
     for (let i = 1; i <= count; i++) {
       arrPageCount.push(i);
     }
-
     return arrPageCount;
   };
+
   const columns = [
-    // columnHelper.accessor('checked', {
-    //   id: 'checked',
-    //   header: () => (
-    //     <div className="flex max-w-max items-center">
-    //       <Checkbox />
-    //     </div>
-    //   ),
-    //   cell: (info: any) => (
-    //     <div className="flex max-w-max items-center">
-    //       <Checkbox defaultChecked={info.getValue()} />
-    //     </div>
-    //   )
-    // }),
+    columnHelper.accessor('checked', {
+      id: 'checked',
+      header: () => (
+        <div className="flex max-w-max items-center">
+          <Checkbox />
+        </div>
+      ),
+      cell: (info: any) => (
+        <div className="flex max-w-max items-center">
+          <Checkbox defaultChecked={info.getValue()} />
+        </div>
+      )
+    }),
     columnHelper.accessor('id', {
       id: 'id',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
           ID
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-medium text-zinc-950 dark:text-white">
-          {info.getValue()}
+        <p className="text-xs text-end font-medium text-zinc-950 dark:text-white">
+          {info.row.index + 1}
         </p>
       )
     }),
     columnHelper.accessor('name', {
       id: 'name',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Name
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-medium text-zinc-950 dark:text-white">
-          {info.getValue()}
-        </p>
+        <Link href={`/dashboard/courses/${info.row.original.id}`}>
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </Link>
+        
       )
     }),
-    columnHelper.accessor('description', {
-      id: 'description',
+    columnHelper.accessor('email', {
+      id: 'email',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          Description
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
+          Email
+        </p>
+      ),
+      cell: (info: any) => {
+        const row = info.row.original;
+        return (
+          <div className="flex justify-start w-full items-center gap-[14px]">
+            <p className="text-xs font-medium text-zinc-950 dark:text-white">
+              {row.teachers?.name ?? '—'}
+            </p>
+          </div>
+        );
+      }
+    }),
+
+    columnHelper.accessor('personal_email', {
+      id: 'personal_email',
+      header: () => (
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          Personal Email
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex w-full items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+        <div className="flex w-full justify-end items-center gap-3">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+          {/* <Badge variant="outline" className={`font-normal text-xs bg-green-200 text-green-700 border-green-200 dark:bg-green-700 dark:text-green-200`}>
+            {info.row.original.currency}
+          </Badge> */}
+        </div>
+      )
+    }),
+     columnHelper.accessor('phone_number', {
+      id: 'phone_number',
+      header: () => (
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          Phone Number
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full justify-end items-center gap-[14px]">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
         </div>
       )
     }),
-    columnHelper.accessor('created_at', {
-      id: 'created_at',
+    columnHelper.accessor('specialization', {
+      id: 'specialization',
       header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          CREATED
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          Specialization
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex w-full items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+        <div className="flex w-full justify-end items-center gap-[14px]">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+    columnHelper.accessor('status', {
+      id: 'status',
+      header: () => (
+        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+          Status
+        </p>
+      ),
+      cell: (info: any) => {
+        const value = info.getValue()?.toLowerCase();
+        const colorClass = statusColors[value] || 'bg-zinc-100 text-zinc-800';
+        return (
+          <div className="flex w-full justify-center items-center gap-[14px]">
+            <Badge
+              variant="outline"
+              className={`${colorClass} capitalize font-medium`}
+            >
+              {value}
+            </Badge>
+          </div>
+        );
+      }
+    }),
+   
+    columnHelper.accessor('created_at', {
+      id: 'created_at',
+      header: () => (
+        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+          Created At
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex justify-end w-full items-center gap-[14px]">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')}
           </p>
         </div>
       )
     }),
-    
     columnHelper.accessor('menu', {
       id: 'menu',
       header: () => (
         <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400"></p>
       ),
-      cell: (info) => <CardMenu vertical={true} />
+      cell: (info) => (
+        <ActionDropdown
+          id={String(info.row.original.id)}
+          onDelete={(id) => onDelete(id)}
+          vertical={true}
+        />
+      )
     })
   ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(() => [...defaultData]);
-  const [{ pageIndex, pageSize }, setPagination] = React.useState<
-    PaginationState
-  >({
-    pageIndex: 0,
-    pageSize: 11
-  });
+  const [data, setData] = React.useState(tableData);
+  React.useEffect(() => {
+    setData(tableData);
+  }, [tableData]);
+  const [{ pageIndex, pageSize }, setPagination] =
+    React.useState<PaginationState>({
+      pageIndex: 0,
+      pageSize: 11
+    });
 
   const pagination = React.useMemo(
     () => ({
@@ -192,7 +296,7 @@ function CheckTable(props: { tableData: any }) {
                       key={header.id}
                       colSpan={header.colSpan}
                       onClick={header.column.getToggleSortingHandler()}
-                      className="cursor-pointer border-zinc-200 pl-5 pr-4 pt-2 text-start dark:border-zinc-800"
+                      className="cursor-pointer border-zinc-200 pl-5 pr-4 pt-2 text-center dark:border-zinc-800"
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -222,7 +326,7 @@ function CheckTable(props: { tableData: any }) {
                       return (
                         <TableCell
                           key={cell.id}
-                          className="w-max border-b-[1px] border-zinc-200 py-5 pl-5 pr-4 dark:border-white/10"
+                          className="w-max border-b-[1px] border-zinc-200 py-2 pl-5 pr-4 dark:border-white/10"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -240,8 +344,8 @@ function CheckTable(props: { tableData: any }) {
         <div className="mt-2 flex h-20 w-full items-center justify-between px-6">
           {/* left side */}
           <div className="flex items-center gap-3">
-            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-              Showing 6 rows per page
+            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              Showing 10 rows per page
             </p>
           </div>
           {/* right side */}
@@ -254,10 +358,10 @@ function CheckTable(props: { tableData: any }) {
               <MdChevronLeft />
             </Button>
 
-            {createPages(table.getPageCount()).map((pageNumber, index) => {
+            {/* {createPages(table.getPageCount()).map((pageNumber, index) => {
        return (
         <Button
-         className={`font-mediumflex items-center justify-center rounded-lg p-2 text-sm transition duration-200 ${
+         className={`font-mediumflex p-0 items-center justify-center rounded-lg p-2 text-xs transition duration-200 ${
           pageNumber === pageIndex + 1
            ? ''
            : 'border border-zinc-200 bg-[transparent] dark:border-zinc-800 dark:text-white'
@@ -268,7 +372,7 @@ function CheckTable(props: { tableData: any }) {
          {pageNumber}
         </Button>
        );
-      })}
+      })} */}
             <Button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}

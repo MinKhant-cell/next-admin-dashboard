@@ -29,6 +29,7 @@ import {
 import React from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
+import Link from 'next/link';
 
 const statusColors: Record<string, string> = {
   upcoming:
@@ -95,7 +96,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm text-end font-medium text-zinc-950 dark:text-white">
+        <p className="text-xs text-end font-medium text-zinc-950 dark:text-white">
           {info.row.index + 1}
         </p>
       )
@@ -108,9 +109,12 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-medium text-zinc-950 dark:text-white">
-          {info.getValue()}
-        </p>
+        <Link href={`/dashboard/courses/${info.row.original.id}`}>
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </Link>
+        
       )
     }),
     columnHelper.accessor('teacher_id', {
@@ -124,7 +128,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         const row = info.row.original;
         return (
           <div className="flex justify-start w-full items-center gap-[14px]">
-            <p className="text-sm font-medium text-zinc-950 dark:text-white">
+            <p className="text-xs font-medium text-zinc-950 dark:text-white">
               {row.teachers?.name ?? '—'}
             </p>
           </div>
@@ -141,7 +145,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
       ),
       cell: (info: any) => (
         <div className="flex w-full justify-end items-center gap-3">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
           <Badge variant="outline" className={`font-normal text-xs bg-green-200 text-green-700 border-green-200 dark:bg-green-700 dark:text-green-200`}>
@@ -181,7 +185,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
       ),
       cell: (info: any) => (
         <div className="flex w-full justify-end items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
         </div>
@@ -196,7 +200,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
       ),
       cell: (info: any) => (
         <div className="flex w-full justify-end items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
         </div>
@@ -211,7 +215,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
       ),
       cell: (info: any) => (
         <div className="flex justify-end w-full items-center gap-[14px]">
-          <p className="text-sm font-medium text-zinc-950 dark:text-white">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')}
           </p>
         </div>
@@ -322,7 +326,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
                       return (
                         <TableCell
                           key={cell.id}
-                          className="w-max border-b-[1px] border-zinc-200 py-5 pl-5 pr-4 dark:border-white/10"
+                          className="w-max border-b-[1px] border-zinc-200 py-2 pl-5 pr-4 dark:border-white/10"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -340,8 +344,8 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         <div className="mt-2 flex h-20 w-full items-center justify-between px-6">
           {/* left side */}
           <div className="flex items-center gap-3">
-            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-              Showing 6 rows per page
+            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              Showing 10 rows per page
             </p>
           </div>
           {/* right side */}
@@ -357,7 +361,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
             {/* {createPages(table.getPageCount()).map((pageNumber, index) => {
        return (
         <Button
-         className={`font-mediumflex p-0 items-center justify-center rounded-lg p-2 text-sm transition duration-200 ${
+         className={`font-mediumflex p-0 items-center justify-center rounded-lg p-2 text-xs transition duration-200 ${
           pageNumber === pageIndex + 1
            ? ''
            : 'border border-zinc-200 bg-[transparent] dark:border-zinc-800 dark:text-white'

@@ -2,8 +2,7 @@
 
 /* eslint-disable */
 import AdminNavbarLinks from './NavbarLinksAdmin';
-import NavLink from '@/components/link/NavLink';
-
+import NavbarBreadcrumb from './NavbarBreadcrumb';
 export default function AdminNavbar(props: {
   brandText: string;
   [x: string]: any;
@@ -14,9 +13,13 @@ export default function AdminNavbar(props: {
     <nav
       className={`fixed right-3 top-3 z-[0] flex w-[calc(100vw_-_6%)] flex-row items-center justify-between rounded-lg bg-white/30 py-2 backdrop-blur-xl transition-all dark:bg-transparent md:right-[30px] md:top-4 md:w-[calc(100vw_-_8%)] md:p-2 lg:w-[calc(100vw_-_6%)] xl:top-[20px] xl:w-[calc(100vw_-_365px)] 2xl:w-[calc(100vw_-_380px)]`}
     >
-      <div className="ml-[6px]">
-        <div className="h-6 md:mb-2 md:w-[224px] md:pt-1">
-          <a
+      <div className="">
+        <div className="h-6 md:mb-2 text-xs md:pt-1">
+          <div>
+          <NavbarBreadcrumb items={[]}/>
+          </div>
+
+          {/* <a
             className="hidden text-xs font-normal text-zinc-950 hover:underline dark:text-white dark:hover:text-white md:inline"
             href=""
           >
@@ -31,16 +34,8 @@ export default function AdminNavbar(props: {
             href="#"
           >
             {brandText}
-          </NavLink>
+          </NavLink> */}
         </div>
-        <p className="text-md shrink capitalize text-zinc-950 dark:text-white md:text-3xl">
-          <NavLink
-            href="#"
-            className="font-bold capitalize hover:text-zinc-950 dark:hover:text-white"
-          >
-            {brandText}
-          </NavLink>
-        </p>
       </div>
       <div className="w-[154px] min-w-max md:ml-auto md:w-[unset]">
         <AdminNavbarLinks />

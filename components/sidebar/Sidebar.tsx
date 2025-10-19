@@ -70,7 +70,7 @@ function Sidebar(props: SidebarProps) {
                   <HiMiniBuildingLibrary className="h-5 w-5" />
                 </div>
                 <h5 className="me-2 text-2xl font-bold leading-5 text-zinc-950 dark:text-white">
-                  Company Name
+                  Name
                 </h5>
               </div>
               <div className="mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10" />
