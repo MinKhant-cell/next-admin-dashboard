@@ -46,7 +46,7 @@ export default function ClassesPage(props: Props) {
       <div className="min-h-screen w-full">
         <div className="flex justify-between mb-3">
           <TableTabs value={filter} onChange={setFilter}/>
-          <Link href={'/dashboard/courses/create'}>
+          <Link href={'/dashboard/students/create'}>
             <Button className="hover:dark:bg-gray-800 hover:dark:text-white" variant="outline" size="sm">
               <LuCircleFadingPlus className="mr-1" /> Add Student
             </Button>

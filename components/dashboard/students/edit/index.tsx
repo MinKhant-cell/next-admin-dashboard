@@ -5,52 +5,36 @@ import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { User } from '@supabase/supabase-js';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { UpdateCourse } from '../hooks/useCourses';
-import { CourseInformationForm } from '../components/CourseInformationForm';
-import { CourseReviewForm } from '../components/CourseReviewForm';
-import { CourseSettingsForm  } from '../components/CourseSettingsForm';
-
+import { StudentInformationForm } from '../components/StudentInformationForm';
+import { StudentReviewForm } from '../components/StudentReviewForm';
+import { CourseSettingsForm } from '../components/StudentSettingsForm';
+import { getStudentById, updateStudent } from '@/hooks/useStudents';
+import dayjs from 'dayjs';
 interface Props {
   user: User | null | undefined;
   userDetails: { [x: string]: any } | null | any;
-  course: any | null;
-  teachers: null | any;
+  id: string | number;
 }
 
-type CourseType = {
+type StudentType = {
   name: string;
-  start_date: string;
-  end_date: string;
-  description?: string;
-  fees: string;
-  currency: string;
-  status: string;
-  teacher_id?: string;
-  is_publish?: boolean;
-  photo_url?: string;
-  duration?: string;
+  email: string;
+  gender: string;
+  date_of_birth: string;
 };
 
 export default function Page(props: Props) {
-  const { user, userDetails, course, teachers } = props;
+  const { user, userDetails, id } = props;
+  const { student, isLoading, isError } = getStudentById(id);
   const router = useRouter();
-  const methods = useForm<CourseType>({
-    defaultValues: {
-      name: course.name,
-      teacher_id: String(course.teacher_id),
-      start_date: course.start_date,
-      end_date: course.end_date,
-      description: course.description,
-      fees: course.fees,
-      currency: course.currency,
-      status: course.status
-    }
-  });
+
+  const methods = useForm<StudentType>();
   const {
     handleSubmit,
     reset,
@@ -59,16 +43,25 @@ export default function Page(props: Props) {
     formState: { errors, isSubmitting }
   } = methods;
 
+  useEffect(() => {
+    if (student) {
+      reset({
+        name: student.name,
+        email: student.email,
+        gender: student.gender,
+        date_of_birth: dayjs(student.date_of_birth).format("YYYY-MM-DD")
+      });
+    }
+  }, [student, reset]);
+
   const [step, setStep] = useState(1);
-  const totalSteps = 3;
+  const totalSteps = 2;
   const formData = watch();
 
-  function getStepFields(step: number): (keyof CourseType)[] {
+  function getStepFields(step: number): (keyof StudentType)[] {
     switch (step) {
       case 1:
-        return ['name','teacher_id','start_date','end_date','fees'];
-      case 2:
-        return ['status'];
+        return ['name', 'email', 'gender', 'date_of_birth'];
       default:
         return [];
     }
@@ -81,15 +74,19 @@ export default function Page(props: Props) {
 
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
-  const handleUpdate = async (courseData: CourseType) => {
-    const { error, data } = await UpdateCourse(course.id, courseData);
-    if (!error) {
-      toast.success('Course updated successfully 🎉');
-      router.refresh();
-      router.push('/dashboard/courses');
-    } else {
-      toast.error('Something went wrong 😢');
-    }
+  const handleUpdate = async (student: StudentType) => {
+    const res = await updateStudent(+id, student);
+    console.log(res);
+    // const { error, data, status, message } = await updateStudent(+id, student);
+    // if (!error && !isSubmitting) {
+    //   toast.success(message);
+    //   reset();
+    //   router.refresh();
+    //   router.push('/dashboard/students');
+    // } else {
+    //   console.log(error);
+    //   toast.error(message);
+    // }
   };
 
   return (
@@ -127,9 +124,8 @@ export default function Page(props: Props) {
                     exit={{ opacity: 0, x: -50 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {step === 1 && <CourseInformationForm teachers={teachers} errors={errors} />}
-                    {step === 2 && <CourseSettingsForm errors={errors} />}
-                    {step === 3 && <CourseReviewForm data={formData} />}
+                    {step === 1 && <StudentInformationForm errors={errors} />}
+                    {step === 2 && <StudentReviewForm data={formData} />}
                   </motion.div>
                 </AnimatePresence>
 

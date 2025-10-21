@@ -14,7 +14,7 @@ export const StudentAPI = {
 
   update: (id: number, data: any) =>
     apiClient(`/students/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       body: JSON.stringify(data),
     }),
 

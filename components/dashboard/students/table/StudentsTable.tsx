@@ -199,7 +199,6 @@ function CheckTable(props) {
         <ActionDropdown
           id={String(info.row.original.id)}
           onDelete={(id) => onDelete(id)}
-          vertical={true}
         />
       )
     })

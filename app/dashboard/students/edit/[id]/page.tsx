@@ -1,10 +1,11 @@
-import StudentCreatePage from '@/components/dashboard/students/create';
+import StudentEditPage from '@/components/dashboard/students/edit';
 import { redirect } from 'next/navigation';
 import { getUserDetails, getUser } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
 
-export default async function StudentCreate() {
+export default async function StudentCreate({params}: {params: Promise<{id: string}>}) {
   const supabase = createClient();
+  const {id} = await params;
   const [user, userDetails] = await Promise.all([
     getUser(supabase),
     getUserDetails(supabase)
@@ -14,5 +15,5 @@ export default async function StudentCreate() {
     return redirect('/dashboard/signin');
   }
 
-  return <StudentCreatePage user={user} userDetails={userDetails} />;
+  return <StudentEditPage id={id} user={user} userDetails={userDetails} />;
 }

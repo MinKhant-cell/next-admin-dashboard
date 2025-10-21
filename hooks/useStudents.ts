@@ -5,7 +5,7 @@ import { fetcher } from "@/lib/api/client";
 
 export function useStudents(page = 1, limit = 10) {
   const { data, error, isLoading } = useSWR(
-    `/students?page=${page}&limit=${limit}`,
+    `/students`,
     fetcher
   );
 
@@ -46,4 +46,17 @@ export const getStudentById = (id: string | number) => {
     isError: error,
   };
 }
+
+export const creatStudent = async(student: any) => {
+  const result = await StudentAPI.create(student);
+  mutate(`/students`);
+  return result;
+}
+
+export const updateStudent = async(id: number, student: any) => {
+  const result = await StudentAPI.update(id,student);
+  mutate(`/students`);
+  return result;
+}
+
 

@@ -1,0 +1,178 @@
+import { useController, useFormContext } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
+export function StudentInformationForm({ errors }: any) {
+  const { register, control, trigger } = useFormContext();
+  const teacher_id = useController({
+    name: 'teacher_id',
+    control,
+    rules: { required: 'Teacher is required' }
+  });
+  const currency = useController({
+    name: 'currency',
+    control,
+    rules: { required: 'Currency is required' }
+  });
+
+  const country = useController({
+    name: 'country',
+    control,
+    rules: { required: 'Country is required' }
+  });
+
+
+  const gender = useController({
+    name: 'gender',
+    control,
+    rules: { required: 'Gender is required' }
+  });
+
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="grid gap-2">
+        <Label className="text-gray-600 dark:text-zinc-200" htmlFor="email">
+          Name
+        </Label>
+        <Input
+          id="name"
+          {...register('name', {
+            required: 'Name is required!',
+            minLength: {
+              value: 1,
+              message: 'Name must be at least 1 characters!'
+            }
+          })}
+        />
+        {errors.name && (
+          <p className="text-red-500 text-xs">{String(errors.name.message)}</p>
+        )}
+      </div>
+    
+      <div className="grid gap-2">
+        <Label className="text-gray-600" htmlFor="email">
+          Email
+        </Label>
+        <Input
+          id="email"
+          {...register('email', {
+            required: 'Email is required!'
+          })}
+        />
+        {errors.email && (
+          <p className="text-red-500 text-xs">
+            {String(errors.email.message)}
+          </p>
+        )}
+      </div>
+
+      {/* <div className="grid gap-2">
+        <Label
+          className="text-gray-600 dark:text-zinc-200"
+          htmlFor="phone"
+        >
+          Phone Number
+        </Label>
+        <Input
+          id="phone"
+          {...register('phone', {
+            required: 'Phone Number is required!',
+            minLength: {
+              value: 6,
+              message: 'Phone Number must be at least 6 number!'
+            }
+          })}
+        />
+        {errors.phone && (
+          <p className="text-red-500 text-xs">
+            {String(errors.phone.message)}
+          </p>
+        )}
+      </div> */}
+
+      <div className="grid gap-2">
+        <Label className="text-gray-600" htmlFor="date_of_birth">
+          Date of Birth
+        </Label>
+        <Input
+          id="date_of_birth"
+          type="date"
+          {...register('date_of_birth', {
+            required: 'Date of Birth is required!'
+          })}
+        />
+        {errors.date_of_birth && (
+          <p className="text-red-500 text-xs">
+            {String(errors.date_of_birth.message)}
+          </p>
+        )}
+      </div>
+
+      <div className="grid gap-2">
+        <Label className="text-gray-600" htmlFor="date_of_birth">
+          Gender
+        </Label>
+        <RadioGroup value={gender.field.value || ''} onValueChange={(val) => {
+          gender.field.onChange(val);
+          trigger("gender"); // optional, force re-validation when changed
+        }}>
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="MALE" id="male" />
+            <Label htmlFor="male" className="text-gray-600">
+              Male
+            </Label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <RadioGroupItem value="FEMALE" id="female" />
+            <Label htmlFor="female" className="text-gray-600">
+              Female
+            </Label>
+          </div>
+        </RadioGroup>
+        {gender.fieldState.error && (
+          <p className="text-red-500 text-xs">
+            {String(gender.fieldState.error.message)}
+          </p>
+        )}
+      </div>
+
+      {/* <div className="grid gap-2">
+        <Label className="text-gray-600 dark:text-zinc-200" htmlFor="country">
+          Country
+        </Label>
+
+        <Select
+          value={country.field.value || ""}
+          onValueChange={country.field.onChange}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select a Country" className="text-gray-600 dark:text-zinc-300" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem className="text-gray-800 dark:text-zinc-200" value="myanmar">Myanmar</SelectItem>
+              <SelectItem className="text-gray-800 dark:text-zinc-200" value="thailand">Thailand</SelectItem>
+              <SelectItem className="text-gray-800 dark:text-zinc-200" value="singapore">Singapore</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        {errors.country && (
+          <p className="text-red-500 text-xs">
+            {String(errors.country.message)}
+          </p>
+        )}
+      </div> */}
+    </div>
+  );
+}

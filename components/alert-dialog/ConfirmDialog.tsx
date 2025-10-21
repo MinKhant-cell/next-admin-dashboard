@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface ConfirmDialogProps {
+isOpen: any;
+onOpenChange: any;
   title?: string;
   description?: string;
   onConfirm: () => Promise<void> | void;
@@ -26,26 +28,20 @@ export function ConfirmDialog({
   description = "This action cannot be undone.",
   onConfirm,
   trigger,
+    isOpen, 
+    onOpenChange
 }: ConfirmDialogProps) {
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleConfirm() {
     setLoading(true);
     await onConfirm();
     setLoading(false);
-    setOpen(false);
+    // setOpen(false);
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        {trigger ?? (
-          <Button variant="destructive" size="sm">
-            Delete
-          </Button>
-        )}
-      </AlertDialogTrigger>
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
