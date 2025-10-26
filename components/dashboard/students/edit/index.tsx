@@ -75,18 +75,15 @@ export default function Page(props: Props) {
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const handleUpdate = async (student: StudentType) => {
-    const res = await updateStudent(+id, student);
-    console.log(res);
-    // const { error, data, status, message } = await updateStudent(+id, student);
-    // if (!error && !isSubmitting) {
-    //   toast.success(message);
-    //   reset();
-    //   router.refresh();
-    //   router.push('/dashboard/students');
-    // } else {
-    //   console.log(error);
-    //   toast.error(message);
-    // }
+    const { error, data, status, message } = await updateStudent(+id, student);
+    if (!error && !isSubmitting) {
+      toast.success(message);
+      reset();
+      router.push(`/dashboard/students/${id}`);
+    } else {
+      console.log(error);
+      toast.error(message);
+    }
   };
 
   return (

@@ -1,3 +1,4 @@
+"use client"
 import CardMenu from '@/components/card/CardMenu';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -26,7 +27,7 @@ import {
   getSortedRowModel,
   flexRender
 } from '@tanstack/react-table';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
@@ -34,7 +35,8 @@ import Link from 'next/link';
 const statusColors: Record<string, string> = {
   upcoming:
     'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
-  active: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
+  active:
+    'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
   ongoing:
     'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100',
   full: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
@@ -57,22 +59,12 @@ type RowObj = {
   menu?: string;
 };
 
-function CheckTable(props) {
-  const { students, onDelete } = props;
-  console.log(props)
+function StudentTable(props) {
+  const { onDelete, students, totalCount, onPaginationChange, pagination } = props;
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  let defaultData = students.data;
-  const tableMeta = students.meta;
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const createPages = (count: number) => {
-    let arrPageCount = [];
-    for (let i = 1; i <= count; i++) {
-      arrPageCount.push(i);
-    }
-    return arrPageCount;
-  };
+
 
   const columns = [
     columnHelper.accessor('checked', {
@@ -114,7 +106,6 @@ function CheckTable(props) {
             {info.getValue()}
           </p>
         </Link>
-        
       )
     }),
     columnHelper.accessor('email', {
@@ -129,7 +120,7 @@ function CheckTable(props) {
         return (
           <div className="flex justify-start w-full items-center gap-[14px]">
             <p className="text-xs font-medium text-zinc-950 dark:text-white">
-               {info.getValue()}
+              {info.getValue()}
             </p>
           </div>
         );
@@ -173,7 +164,7 @@ function CheckTable(props) {
         );
       }
     }),
- 
+
     columnHelper.accessor('createdAt', {
       id: 'createdAt',
       header: () => (
@@ -203,34 +194,16 @@ function CheckTable(props) {
       )
     })
   ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(students.data);
-  React.useEffect(() => {
-    setData(students.data);
-  }, [students.data]);
-  const [{ pageIndex, pageSize }, setPagination] =
-    React.useState<PaginationState>({
-      pageIndex: 0,
-      pageSize: 11
-    });
 
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize
-    }),
-    [pageIndex, pageSize]
-  );
   const table = useReactTable({
-    data,
+    data: students,
     columns,
     state: {
       columnFilters,
-      globalFilter,
       pagination
     },
-    onPaginationChange: setPagination,
+    onPaginationChange: onPaginationChange,
     onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -240,7 +213,9 @@ function CheckTable(props) {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
-    debugColumns: false
+    debugColumns: false,
+    manualPagination: true,
+    pageCount: Math.ceil(totalCount / pagination.pageSize),
   });
 
   return (
@@ -312,21 +287,28 @@ function CheckTable(props) {
           {/* left side */}
           <div className="flex items-center gap-3">
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-              Showing 10 rows per page
+              Showing {pagination.pageSize } rows per page
             </p>
           </div>
           {/* right side */}
           <div className="flex items-center gap-2">
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-              Total {tableMeta.total}
+              Total {totalCount}
             </p>
-            <Button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className={`flex items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 transition duration-200 hover:bg-transparent active:bg-transparent dark:text-white dark:hover:bg-transparent dark:active:bg-transparent`}
-            >
-              <MdChevronLeft />
-            </Button>
+             <Button
+      onClick={() => {
+        if (pagination.pageIndex > 0) {
+          onPaginationChange({
+            ...pagination,
+            pageIndex: pagination.pageIndex - 1,
+          });
+        }
+      }}
+      disabled={pagination.pageIndex === 0}
+      className="flex items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
+    >
+      <MdChevronLeft />
+    </Button>
 
             {/* {createPages(table.getPageCount()).map((pageNumber, index) => {
        return (
@@ -344,12 +326,23 @@ function CheckTable(props) {
        );
       })} */}
             <Button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className={`flex min-w-[34px] items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 transition duration-200 hover:bg-transparent active:bg-transparent dark:text-white dark:hover:bg-transparent dark:active:bg-transparent`}
-            >
-              <MdChevronRight />
-            </Button>
+      onClick={() => {
+        const maxPage = Math.ceil(totalCount / pagination.pageSize);
+        if (pagination.pageIndex + 1 < maxPage) {
+          onPaginationChange({
+            ...pagination,
+            pageIndex: pagination.pageIndex + 1,
+          });
+        }
+      }}
+      disabled={
+        pagination.pageIndex + 1 >=
+        Math.ceil(totalCount / pagination.pageSize)
+      }
+      className="flex min-w-[34px] items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
+    >
+      <MdChevronRight />
+    </Button>
           </div>
         </div>
       </div>
@@ -357,5 +350,5 @@ function CheckTable(props) {
   );
 }
 
-export default CheckTable;
+export default StudentTable;
 const columnHelper = createColumnHelper<RowObj>();

@@ -35,6 +35,29 @@ export function useStudents(page = 1, limit = 10) {
   };
 }
 
+export const getStudents = (page = 1, limit = 10, filter) => {
+
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+  if (filter.email) params.append('email', filter.email);
+  if (filter.gender) params.append('gender', filter.gender);
+  if (filter.date_of_birth) params.append('date_of_birth', filter.date_of_birth);
+  const queryString = params.toString();
+  const { data, error, isLoading } = useSWR(
+     `/students?${queryString}`,
+    fetcher
+  );
+  // mutate(`/students?page=${page}&limit=${limit}`);
+
+  return {
+    students: data ?? [],
+    isLoading,
+    isError: error,
+  };
+}
+
 export const getStudentById = (id: string | number) => {
   const { data, error, isLoading } = useSWR(
     `/students/${id}`,
