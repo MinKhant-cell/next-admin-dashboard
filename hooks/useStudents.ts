@@ -44,12 +44,12 @@ export const getStudents = (page = 1, limit = 10, filter) => {
   if (filter.email) params.append('email', filter.email);
   if (filter.gender) params.append('gender', filter.gender);
   if (filter.date_of_birth) params.append('date_of_birth', filter.date_of_birth);
+  if (filter.search) params.append('search', filter.search);
   const queryString = params.toString();
   const { data, error, isLoading } = useSWR(
      `/students?${queryString}`,
     fetcher
   );
-  // mutate(`/students?page=${page}&limit=${limit}`);
 
   return {
     students: data ?? [],
@@ -82,4 +82,8 @@ export const updateStudent = async(id: number, student: any) => {
   return result;
 }
 
+export const deleteStudent = async(id: number) => {
+  const result = await StudentAPI.remove(id);;
+  return result;
+}
 

@@ -19,7 +19,7 @@ function ActionDropdown(props: {
   id: string;
   onDelete: (id: string) => void;
 }) {
-  const { transparent, id, onDelete } = props;
+  const { id, onDelete } = props;
   const [open, setOpen] = React.useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   return (

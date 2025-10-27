@@ -20,7 +20,7 @@ interface Props {
   id: string | number;
 }
 
-export default function StudentDetailsPage(props: Props) {
+export default function TeacherDetailsPage(props: Props) {
   const { user, userDetails, id } = props;
 
   const { student, isLoading, isError } = getStudentById(id);
@@ -80,7 +80,7 @@ export default function StudentDetailsPage(props: Props) {
         <Card className={'h-full py-3 w-full sm:overflow-auto'}>
           <div className="px-5">
             <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-              Student Information
+              Teacher Information
             </h1>
           </div>
           <Separator />

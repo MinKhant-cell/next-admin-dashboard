@@ -1,19 +1,22 @@
-import TeacherList from '@/components/dashboard/teachers';
 import { redirect } from 'next/navigation';
 import { getUserDetails, getUser } from '@/utils/supabase/queries';
 import { createClient } from '@/utils/supabase/server';
-import { FetchTeachers } from '@/components/dashboard/teachers/hooks/useTeacher';
-
-export default async function Account() {
+import TeacherDetailsPage from '@/components/dashboard/teachers/details';
+export default async function TeacherDetails({
+  params
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const supabase = createClient();
   const [user, userDetails] = await Promise.all([
     getUser(supabase),
-    getUserDetails(supabase),
+    getUserDetails(supabase)
   ]);
 
   if (!user) {
     return redirect('/dashboard/signin');
   }
 
-  return <TeacherList user={user} userDetails={userDetails} />;
+  return <TeacherDetailsPage id={id} user={user} userDetails={userDetails} />;
 }

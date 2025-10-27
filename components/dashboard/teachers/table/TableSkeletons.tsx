@@ -13,7 +13,6 @@ export default function TableSkeletons({ rows = 10, columns = 5 }) {
                 <Skeleton key={c} className="h-4 w-1/5" />
                 ))
             }
-            
           </div>
         ))}
       </div>
