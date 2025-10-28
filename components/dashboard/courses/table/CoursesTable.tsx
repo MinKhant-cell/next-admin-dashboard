@@ -1,3 +1,4 @@
+"use client"
 import CardMenu from '@/components/card/CardMenu';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -26,7 +27,7 @@ import {
   getSortedRowModel,
   flexRender
 } from '@tanstack/react-table';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
@@ -34,7 +35,8 @@ import Link from 'next/link';
 const statusColors: Record<string, string> = {
   upcoming:
     'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
-  open: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
+  active:
+    'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
   ongoing:
     'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100',
   full: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
@@ -50,29 +52,22 @@ type RowObj = {
   checked?: string;
   id: number;
   name: string;
-  teacher_id: string;
   start_date: string;
   end_date: string;
-  fees: string;
+  duration: string;
+  fees: number;
+  currency: string;
   status: string;
   created_at: string;
   menu?: string;
 };
 
-function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
-  const { tableData, onDelete } = props;
+function StudentTable(props) {
+  const { onDelete, data, totalCount, onPaginationChange, pagination } = props;
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  let defaultData = tableData;
-  const [globalFilter, setGlobalFilter] = React.useState('');
-  const createPages = (count: number) => {
-    let arrPageCount = [];
-    for (let i = 1; i <= count; i++) {
-      arrPageCount.push(i);
-    }
-    return arrPageCount;
-  };
+
 
   const columns = [
     columnHelper.accessor('checked', {
@@ -109,19 +104,18 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         </p>
       ),
       cell: (info) => (
-        <Link href={`/dashboard/courses/${info.row.original.id}`}>
+        <Link href={`/dashboard/students/${info.row.original.id}`}>
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
         </Link>
-        
       )
     }),
-    columnHelper.accessor('teacher_id', {
-      id: 'teacher_id',
+    columnHelper.accessor('start_date', {
+      id: 'start_date',
       header: () => (
         <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
-          Teacher
+          Start Date
         </p>
       ),
       cell: (info: any) => {
@@ -129,31 +123,62 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         return (
           <div className="flex justify-start w-full items-center gap-[14px]">
             <p className="text-xs font-medium text-zinc-950 dark:text-white">
-              {row.teachers?.name ?? '—'}
+              {info.getValue()}
             </p>
           </div>
         );
       }
     }),
 
-    columnHelper.accessor('fees', {
+    columnHelper.accessor('end_date', {
+      id: 'end_date',
+      header: () => (
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
+          End date
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full justify-start items-center gap-3">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+
+     columnHelper.accessor('duration', {
+      id: 'duration',
+      header: () => (
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
+          Duration
+        </p>
+      ),
+      cell: (info: any) => (
+        <div className="flex w-full justify-start items-center gap-3">
+          <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
+      )
+    }),
+
+     columnHelper.accessor('fees', {
       id: 'fees',
       header: () => (
-        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Fees
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex w-full justify-end items-center gap-3">
+        <div className="flex w-full justify-start items-center gap-3">
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
-          <Badge variant="outline" className={`font-normal text-xs bg-green-200 text-green-700 border-green-200 dark:bg-green-700 dark:text-green-200`}>
-            {info.row.original.currency}
-          </Badge>
         </div>
       )
     }),
+    
+    
     columnHelper.accessor('status', {
       id: 'status',
       header: () => (
@@ -176,36 +201,7 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         );
       }
     }),
-    columnHelper.accessor('start_date', {
-      id: 'start_date',
-      header: () => (
-        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
-          Start Date
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full justify-end items-center gap-[14px]">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
-          </p>
-        </div>
-      )
-    }),
-    columnHelper.accessor('end_date', {
-      id: 'end_date',
-      header: () => (
-        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
-          End Date
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full justify-end items-center gap-[14px]">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
-          </p>
-        </div>
-      )
-    }),
+
     columnHelper.accessor('created_at', {
       id: 'created_at',
       header: () => (
@@ -231,39 +227,20 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
         <ActionDropdown
           id={String(info.row.original.id)}
           onDelete={(id) => onDelete(id)}
-          vertical={true}
         />
       )
     })
   ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(tableData);
-  React.useEffect(() => {
-    setData(tableData);
-  }, [tableData]);
-  const [{ pageIndex, pageSize }, setPagination] =
-    React.useState<PaginationState>({
-      pageIndex: 0,
-      pageSize: 11
-    });
 
-  const pagination = React.useMemo(
-    () => ({
-      pageIndex,
-      pageSize
-    }),
-    [pageIndex, pageSize]
-  );
   const table = useReactTable({
-    data,
+    data: data,
     columns,
     state: {
       columnFilters,
-      globalFilter,
       pagination
     },
-    onPaginationChange: setPagination,
+    onPaginationChange: onPaginationChange,
     onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -273,7 +250,9 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
-    debugColumns: false
+    debugColumns: false,
+    manualPagination: true,
+    pageCount: Math.ceil(totalCount / pagination.pageSize),
   });
 
   return (
@@ -345,18 +324,28 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
           {/* left side */}
           <div className="flex items-center gap-3">
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-              Showing 10 rows per page
+              Showing {pagination.pageSize } rows per page
             </p>
           </div>
           {/* right side */}
           <div className="flex items-center gap-2">
-            <Button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className={`flex items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 transition duration-200 hover:bg-transparent active:bg-transparent dark:text-white dark:hover:bg-transparent dark:active:bg-transparent`}
-            >
-              <MdChevronLeft />
-            </Button>
+            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              Total {totalCount}
+            </p>
+             <Button
+      onClick={() => {
+        if (pagination.pageIndex > 0) {
+          onPaginationChange({
+            ...pagination,
+            pageIndex: pagination.pageIndex - 1,
+          });
+        }
+      }}
+      disabled={pagination.pageIndex === 0}
+      className="flex items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
+    >
+      <MdChevronLeft />
+    </Button>
 
             {/* {createPages(table.getPageCount()).map((pageNumber, index) => {
        return (
@@ -374,12 +363,23 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
        );
       })} */}
             <Button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className={`flex min-w-[34px] items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 transition duration-200 hover:bg-transparent active:bg-transparent dark:text-white dark:hover:bg-transparent dark:active:bg-transparent`}
-            >
-              <MdChevronRight />
-            </Button>
+      onClick={() => {
+        const maxPage = Math.ceil(totalCount / pagination.pageSize);
+        if (pagination.pageIndex + 1 < maxPage) {
+          onPaginationChange({
+            ...pagination,
+            pageIndex: pagination.pageIndex + 1,
+          });
+        }
+      }}
+      disabled={
+        pagination.pageIndex + 1 >=
+        Math.ceil(totalCount / pagination.pageSize)
+      }
+      className="flex min-w-[34px] items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
+    >
+      <MdChevronRight />
+    </Button>
           </div>
         </div>
       </div>
@@ -387,5 +387,5 @@ function CheckTable(props: { tableData: any; onDelete: (id: string) => void }) {
   );
 }
 
-export default CheckTable;
+export default StudentTable;
 const columnHelper = createColumnHelper<RowObj>();

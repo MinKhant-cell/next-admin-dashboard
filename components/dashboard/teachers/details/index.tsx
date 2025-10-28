@@ -9,11 +9,11 @@ import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { LuChevronsLeft, LuArrowLeft, LuCircleFadingPlus } from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
-import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
 import { getStudentById } from '@/hooks/useStudents';
+import { getTeacherById } from '@/hooks/useTeachers';
 interface Props {
   user: User | null | undefined;
   userDetails: { [x: string]: any } | null | any;
@@ -23,7 +23,7 @@ interface Props {
 export default function TeacherDetailsPage(props: Props) {
   const { user, userDetails, id } = props;
 
-  const { student, isLoading, isError } = getStudentById(id);
+  const { teacher, isLoading, isError } = getTeacherById(id);
 
   const statusColors: Record<string, string> = {
     upcoming:
@@ -71,7 +71,7 @@ export default function TeacherDetailsPage(props: Props) {
       <Toaster position="top-right" />
       <div className="flex gap-5">
         <div>
-          <Link href={'/dashboard/students'}>
+          <Link href={'/dashboard/teachers'}>
             <Button className="hover:dark:bg-gray-800 hover:dark:text-white" variant="outline" size="sm">
               <LuArrowLeft/> 
             </Button>
@@ -90,13 +90,13 @@ export default function TeacherDetailsPage(props: Props) {
               <p>Loading ...</p>
             ) : (
               <div>
-                {renderRow('Name', student.name)}
-                {renderRow('Email', student.email)}
-                {renderRow('Phone', student.phone)}
-                {renderRow('Gender', student.gender)}
-                {renderRow('Country', student.country)}
-                {renderRow('Status', student.status)}
-                {renderRow('Created At', student.createdAt)}
+                {renderRow('Name', teacher.name)}
+                {renderRow('Email', teacher.email)}
+                {renderRow('Phone', teacher.phone)}
+                {renderRow('Gender', teacher.gender)}
+                {renderRow('Country', teacher.country)}
+                {renderRow('Status', teacher.status)}
+                {renderRow('Created At', teacher.createdAt)}
               </div>
             )}
           </div>
