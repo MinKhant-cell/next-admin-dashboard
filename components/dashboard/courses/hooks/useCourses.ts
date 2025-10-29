@@ -2,14 +2,14 @@ export const dynamic = 'force-dynamic';
 import { createClient } from '@supabase/supabase-js';
 
 type Course = {
-  name: string;
-  start_date: string;
-  end_date: string;
+  name?: string;
+  start_date?: string;
+  end_date?: string;
   description?: string;
-  fees: string;
-  currency: string;
-  status: string;
-  teacher_id?: string;
+  fees?: string;
+  currency?: string;
+  status?: string;
+  employee_id?: string;
   is_publish?: boolean;
   photo_url?: string;
   duration?: string;
@@ -63,7 +63,7 @@ export const FetchCourse = async (id) => {
 };
 
 
-export const UpdateCourse = async (id: string, courseData: Course) => {
+export const UpdateCourse = async (id: string | number, courseData: Course) => {
   const { data, error, status } = await supabase.from('courses').update(courseData).eq('id',id);
   return { data, error, status };
 };

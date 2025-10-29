@@ -27,6 +27,18 @@ export const getTeachers = (page = 1, limit = 10, filter) => {
   };
 }
 
+export const getAllTeachers = () => {
+  const { data, error, isLoading } = useSWR(
+     `/employees`,
+    fetcher
+  );
+  return {
+    teachers: data ?? [],
+    isLoading,
+    isError: error,
+  };
+}
+
 export const getTeacherById = (id: string | number) => {
   const { data, error, isLoading } = useSWR(
     `/employees/${id}`,

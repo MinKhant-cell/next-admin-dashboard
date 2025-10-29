@@ -39,7 +39,7 @@ function ActionDropdown(props: {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link
-                href={`/dashboard/students/edit/${id}`}
+                href={`/dashboard/courses/edit/${id}`}
                 className="flex items-center gap-2 text-zinc-800 hover:font-medium hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
               >
                 <LuSquarePen />
@@ -61,7 +61,7 @@ function ActionDropdown(props: {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ConfirmDialog isOpen={confirmDialogOpen} onOpenChange={setConfirmDialogOpen} title='Delete Student' description='Please Confirm to Delete!' onConfirm={()=>onDelete(id)}/>
+      <ConfirmDialog isOpen={confirmDialogOpen} onOpenChange={setConfirmDialogOpen} title='Delete Course' description='Please Confirm to Delete!' onConfirm={()=>onDelete(id)}/>
     </div>
   );
 }

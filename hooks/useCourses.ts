@@ -2,6 +2,7 @@ import useSWR from "swr";
 import { mutate } from "swr";
 import { StudentAPI } from "@/lib/api/student";
 import { fetcher } from "@/lib/api/client";
+import { CourseAPI } from "@/lib/api/course";
 
 
 
@@ -31,26 +32,26 @@ export const getCourseById = (id: string | number) => {
     fetcher
   );
   return {
-    student: data ?? null,
+    course: data ?? null,
     isLoading,
     isError: error,
   };
 }
 
 export const creatCourse = async(student: any) => {
-  const result = await StudentAPI.create(student);
+  const result = await CourseAPI.create(student);
   mutate(`/courses`);
   return result;
 }
 
 export const updateCourse = async(id: number, student: any) => {
-  const result = await StudentAPI.update(id,student);
+  const result = await CourseAPI.update(id,student);
   mutate(`/courses`);
   return result;
 }
 
 export const deleteCourse = async(id: number) => {
-  const result = await StudentAPI.remove(id);;
+  const result = await CourseAPI.remove(id);;
   return result;
 }
 

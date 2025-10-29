@@ -1,6 +1,6 @@
 import { apiClient } from "./client";
 
-export const StudentAPI = {
+export const CourseAPI = {
   getAll: (page = 1, limit = 10) =>
     apiClient(`/courses?page=${page}&limit=${limit}`),
 

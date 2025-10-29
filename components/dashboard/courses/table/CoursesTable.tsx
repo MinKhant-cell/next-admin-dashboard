@@ -31,6 +31,7 @@ import React, { useEffect, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
+import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
 
 const statusColors: Record<string, string> = {
   upcoming:
@@ -59,6 +60,7 @@ type RowObj = {
   currency: string;
   status: string;
   created_at: string;
+  teacher?: string;
   menu?: string;
 };
 
@@ -83,7 +85,7 @@ function StudentTable(props) {
         </div>
       )
     }),
-    columnHelper.accessor('id', {
+       columnHelper.accessor('id', {
       id: 'id',
       header: () => (
         <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
@@ -104,12 +106,23 @@ function StudentTable(props) {
         </p>
       ),
       cell: (info) => (
-        <Link href={`/dashboard/students/${info.row.original.id}`}>
+        <Link href={`/dashboard/courses/${info.row.original.id}`}>
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
         </Link>
       )
+    }),
+    columnHelper.accessor('teacher', {
+      id: 'teacher',
+      header: () => (
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
+          Teacher
+        </p>
+      ),
+      cell: (info) => (
+        <AssignTeacherDialogForm/> 
+        )
     }),
     columnHelper.accessor('start_date', {
       id: 'start_date',
@@ -123,7 +136,7 @@ function StudentTable(props) {
         return (
           <div className="flex justify-start w-full items-center gap-[14px]">
             <p className="text-xs font-medium text-zinc-950 dark:text-white">
-              {info.getValue()}
+              {info.getValue() ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm') : '-'}
             </p>
           </div>
         );
@@ -140,7 +153,8 @@ function StudentTable(props) {
       cell: (info: any) => (
         <div className="flex w-full justify-start items-center gap-3">
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
+                          {info.getValue() ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm') : '-'}
+
           </p>
         </div>
       )
@@ -212,7 +226,8 @@ function StudentTable(props) {
       cell: (info: any) => (
         <div className="flex justify-end w-full items-center gap-[14px]">
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')}
+                          {info.getValue() ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm') : '-'}
+
           </p>
         </div>
       )

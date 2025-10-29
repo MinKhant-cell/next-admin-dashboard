@@ -30,7 +30,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { mutate } from 'swr';
-import { getCourses } from '@/hooks/useCourses';
+import { deleteCourse, getCourses } from '@/hooks/useCourses';
 interface Props {
   user: User | null | undefined;
   userDetails: { [x: string]: any } | null | any;
@@ -58,8 +58,8 @@ export default function CoursesPage(props: Props) {
     return () => clearTimeout(searchHandler);
   }, [debouncedSearch]);
 
-  const handleStudentsDelete = async (id: number) => {
-    const { status, message, error } = await deleteStudent(id);
+  const handleCoursesDelete = async (id: number) => {
+    const { status, message, error } = await deleteCourse(id);
     if (!error && status == 204) {
       const params = new URLSearchParams({
         page: String(pagination.pageIndex + 1),
@@ -160,7 +160,7 @@ export default function CoursesPage(props: Props) {
               totalCount={courses.meta.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
-              onDelete={handleStudentsDelete}
+              onDelete={handleCoursesDelete}
             />
           )}
         </div>

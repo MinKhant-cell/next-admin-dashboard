@@ -11,11 +11,10 @@ export default async function EditClass({
 }) {
   const { id } = await params;
   const supabase = createClient();
-  const [user, userDetails, { data: course, error: fetchCourseError }] =
+  const [user, userDetails] =
     await Promise.all([
       getUser(supabase),
       getUserDetails(supabase),
-      FetchCourse(id)
     ]);
 
   if (!user) {
@@ -23,6 +22,6 @@ export default async function EditClass({
   }
 
   return (
-    <CourseDetailsPage course={course} user={user} userDetails={userDetails} />
+    <CourseDetailsPage id={id} user={user} userDetails={userDetails} />
   );
 }
