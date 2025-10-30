@@ -16,17 +16,23 @@ import { LuBadgePlus, LuCirclePlus } from "react-icons/lu"
 import { TeachersSelect } from "./TeachersSelect"
 import { useState } from "react"
 import { UpdateCourse } from "../hooks/useCourses"
+import { updateCourse } from "@/hooks/useCourses"
+import { toast } from "sonner"
 
-export function AssignTeacherDialogForm() {
+export function AssignTeacherDialogForm({id}) {
     const [teacherId, selectTeacherId] = useState("");
 
     const assignTeacher = async (e) => {
         e.preventDefault();
-        const data = {
+        const updateData = {
             employee_id: teacherId
         }
-        const result = await UpdateCourse(1,data);
-        console.log(result);
+        const {data, message, status, error} = await updateCourse(id,updateData);
+        if(!error && status == 200) {
+            toast.success(message);
+        }else {
+          toast.error(message);
+        }
         
     }
   return (

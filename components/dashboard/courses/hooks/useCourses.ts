@@ -64,7 +64,7 @@ export const FetchCourse = async (id) => {
 
 
 export const UpdateCourse = async (id: string | number, courseData: Course) => {
-  const { data, error, status } = await supabase.from('courses').update(courseData).eq('id',id);
+  const { data, error, status } = await supabase.from('courses').update(courseData);
   return { data, error, status };
 };
 

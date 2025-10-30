@@ -50,6 +50,8 @@ export default function CoursesPage(props: Props) {
     pagination.pageSize,
     filter
   );
+  console.log(isError)
+  
 
   useEffect(() => {
     const searchHandler = setTimeout(() => {
@@ -156,8 +158,8 @@ export default function CoursesPage(props: Props) {
             <TableSkeletons />
           ) : (
             <CoursesTable
-              data={courses.data}
-              totalCount={courses.meta.total || 0}
+              data={courses.data || []}
+              totalCount={courses.meta?.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
               onDelete={handleCoursesDelete}

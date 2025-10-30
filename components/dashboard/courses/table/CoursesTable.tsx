@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import CardMenu from '@/components/card/CardMenu';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -70,7 +70,6 @@ function StudentTable(props) {
     []
   );
 
-
   const columns = [
     columnHelper.accessor('checked', {
       id: 'checked',
@@ -85,7 +84,7 @@ function StudentTable(props) {
         </div>
       )
     }),
-       columnHelper.accessor('id', {
+    columnHelper.accessor('id', {
       id: 'id',
       header: () => (
         <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
@@ -120,9 +119,7 @@ function StudentTable(props) {
           Teacher
         </p>
       ),
-      cell: (info) => (
-        <AssignTeacherDialogForm/> 
-        )
+      cell: (info) => <AssignTeacherDialogForm id={info.row.original.id}/>
     }),
     columnHelper.accessor('start_date', {
       id: 'start_date',
@@ -136,7 +133,9 @@ function StudentTable(props) {
         return (
           <div className="flex justify-start w-full items-center gap-[14px]">
             <p className="text-xs font-medium text-zinc-950 dark:text-white">
-              {info.getValue() ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm') : '-'}
+              {info.getValue()
+                ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
+                : '-'}
             </p>
           </div>
         );
@@ -153,14 +152,15 @@ function StudentTable(props) {
       cell: (info: any) => (
         <div className="flex w-full justify-start items-center gap-3">
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
-                          {info.getValue() ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm') : '-'}
-
+            {info.getValue()
+              ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
+              : '-'}
           </p>
         </div>
       )
     }),
 
-     columnHelper.accessor('duration', {
+    columnHelper.accessor('duration', {
       id: 'duration',
       header: () => (
         <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
@@ -176,7 +176,7 @@ function StudentTable(props) {
       )
     }),
 
-     columnHelper.accessor('fees', {
+    columnHelper.accessor('fees', {
       id: 'fees',
       header: () => (
         <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
@@ -191,8 +191,7 @@ function StudentTable(props) {
         </div>
       )
     }),
-    
-    
+
     columnHelper.accessor('status', {
       id: 'status',
       header: () => (
@@ -226,8 +225,9 @@ function StudentTable(props) {
       cell: (info: any) => (
         <div className="flex justify-end w-full items-center gap-[14px]">
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
-                          {info.getValue() ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm') : '-'}
-
+            {info.getValue()
+              ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
+              : '-'}
           </p>
         </div>
       )
@@ -267,7 +267,7 @@ function StudentTable(props) {
     debugHeaders: true,
     debugColumns: false,
     manualPagination: true,
-    pageCount: Math.ceil(totalCount / pagination.pageSize),
+    pageCount: Math.ceil(totalCount / pagination.pageSize)
   });
 
   return (
@@ -307,31 +307,32 @@ function StudentTable(props) {
             </TableHeader>
           ))}
           <TableBody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 10)
-              .map((row) => {
-                return (
-                  <TableRow
-                    key={row.id}
-                    className="px-6 dark:hover:bg-gray-900"
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <TableCell
-                          key={cell.id}
-                          className="w-max border-b-[1px] border-zinc-200 py-2 pl-5 pr-4 dark:border-white/10"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+            {table.getRowModel().rows.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} className="px-6 dark:hover:bg-gray-900">
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="w-max border-b-[1px] border-zinc-200 py-2 pl-5 pr-4 dark:border-white/10"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center text-sm text-gray-500 dark:text-gray-400"
+                >
+                  No Data Available
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
         {/* pagination */}
@@ -339,7 +340,7 @@ function StudentTable(props) {
           {/* left side */}
           <div className="flex items-center gap-3">
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-              Showing {pagination.pageSize } rows per page
+              Showing {pagination.pageSize} rows per page
             </p>
           </div>
           {/* right side */}
@@ -347,20 +348,20 @@ function StudentTable(props) {
             <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
               Total {totalCount}
             </p>
-             <Button
-      onClick={() => {
-        if (pagination.pageIndex > 0) {
-          onPaginationChange({
-            ...pagination,
-            pageIndex: pagination.pageIndex - 1,
-          });
-        }
-      }}
-      disabled={pagination.pageIndex === 0}
-      className="flex items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
-    >
-      <MdChevronLeft />
-    </Button>
+            <Button
+              onClick={() => {
+                if (pagination.pageIndex > 0) {
+                  onPaginationChange({
+                    ...pagination,
+                    pageIndex: pagination.pageIndex - 1
+                  });
+                }
+              }}
+              disabled={pagination.pageIndex === 0}
+              className="flex items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
+            >
+              <MdChevronLeft />
+            </Button>
 
             {/* {createPages(table.getPageCount()).map((pageNumber, index) => {
        return (
@@ -378,23 +379,23 @@ function StudentTable(props) {
        );
       })} */}
             <Button
-      onClick={() => {
-        const maxPage = Math.ceil(totalCount / pagination.pageSize);
-        if (pagination.pageIndex + 1 < maxPage) {
-          onPaginationChange({
-            ...pagination,
-            pageIndex: pagination.pageIndex + 1,
-          });
-        }
-      }}
-      disabled={
-        pagination.pageIndex + 1 >=
-        Math.ceil(totalCount / pagination.pageSize)
-      }
-      className="flex min-w-[34px] items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
-    >
-      <MdChevronRight />
-    </Button>
+              onClick={() => {
+                const maxPage = Math.ceil(totalCount / pagination.pageSize);
+                if (pagination.pageIndex + 1 < maxPage) {
+                  onPaginationChange({
+                    ...pagination,
+                    pageIndex: pagination.pageIndex + 1
+                  });
+                }
+              }}
+              disabled={
+                pagination.pageIndex + 1 >=
+                Math.ceil(totalCount / pagination.pageSize)
+              }
+              className="flex min-w-[34px] items-center justify-center rounded-lg bg-transparent p-2 text-lg text-zinc-950 dark:text-white"
+            >
+              <MdChevronRight />
+            </Button>
           </div>
         </div>
       </div>
