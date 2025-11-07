@@ -16,9 +16,8 @@ import { StudentReviewForm } from '../components/StudentReviewForm';
 import { CourseSettingsForm } from '../components/StudentSettingsForm';
 import { getStudentById, updateStudent } from '@/hooks/useStudents';
 import dayjs from 'dayjs';
+import StudentImageUpload from '../components/StudentImageUpload';
 interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
   id: string | number;
 }
 
@@ -27,10 +26,11 @@ type StudentType = {
   email: string;
   gender: string;
   date_of_birth: string;
+  image?: string;
 };
 
 export default function Page(props: Props) {
-  const { user, userDetails, id } = props;
+  const { id } = props;
   const { student, isLoading, isError } = getStudentById(id);
   const router = useRouter();
 
@@ -55,13 +55,15 @@ export default function Page(props: Props) {
   }, [student, reset]);
 
   const [step, setStep] = useState(1);
-  const totalSteps = 2;
+  const totalSteps = 3;
   const formData = watch();
 
   function getStepFields(step: number): (keyof StudentType)[] {
     switch (step) {
       case 1:
         return ['name', 'email', 'gender', 'date_of_birth'];
+      case 2:
+        return ['image'];
       default:
         return [];
     }
@@ -88,8 +90,6 @@ export default function Page(props: Props) {
 
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >
@@ -122,7 +122,8 @@ export default function Page(props: Props) {
                     transition={{ duration: 0.3 }}
                   >
                     {step === 1 && <StudentInformationForm errors={errors} />}
-                    {step === 2 && <StudentReviewForm data={formData} />}
+                    {step === 2 && <StudentImageUpload errors={errors} />}
+                    {step === 3 && <StudentReviewForm data={formData} />}
                   </motion.div>
                 </AnimatePresence>
 

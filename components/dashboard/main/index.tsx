@@ -6,16 +6,11 @@ import MainDashboardTable from '@/components/dashboard/main/cards/MainDashboardT
 import DashboardLayout from '@/components/layout';
 import tableDataUserReports from '@/variables/tableDataUserReports';
 import { User } from '@supabase/supabase-js';
-interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
-}
 
-export default function Settings(props: Props) {
+
+export default function Settings() {
   return (
     <DashboardLayout
-      user={props.user}
-      userDetails={props.userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >

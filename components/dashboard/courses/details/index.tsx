@@ -16,28 +16,24 @@ import { Badge } from '@/components/ui/badge';
 import { getStudentById } from '@/hooks/useStudents';
 import { getCourseById } from '@/hooks/useCourses';
 interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
   id: string | number;
 }
 
 export default function CourseDetailsPage(props: Props) {
-  const { user, userDetails, id } = props;
-
+  const { id } = props;
   const { course, isLoading, isError } = getCourseById(id);
-
   const statusColors: Record<string, string> = {
-    upcoming:
+    UPCOMING:
       'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
-    active: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
-    ongoing:
+    ACTIVE: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
+    ONGOING:
       'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100',
-    full: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
-    completed:
+    FULL: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
+    COMPLETED:
       'bg-indigo-100 text-indigo-800 border-indigo-200 dark:bg-indigo-900 dark:text-indigo-100',
-    paused:
+    PAUSED:
       'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-100',
-    inactive:
+    INACTIVE:
       'bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-100'
   };
 
@@ -64,8 +60,6 @@ export default function CourseDetailsPage(props: Props) {
   );
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >
@@ -91,12 +85,18 @@ export default function CourseDetailsPage(props: Props) {
               <p>Loading ...</p>
             ) : (
               <div>
+                {/* <p className="text-green-500">
+                  {JSON.stringify(course)}
+                </p> */}
                 {renderRow('Name', course.name)}
-                {renderRow('Email', course.email)}
-                {renderRow('Phone', course.phone)}
-                {renderRow('Gender', course.gender)}
-                {renderRow('Country', course.country)}
+                {renderRow('Teacher', course.employee?.name)}
+                {renderRow('Start Date', course.start_date)}
+                {renderRow('End Date', course.end_date)}
+                {renderRow('Duration', course.duration)}
+                {renderRow('Fees', course.fees+' '+course.currency)}
                 {renderRow('Status', course.status)}
+                {renderRow('Description', course.description)}
+                {renderRow('Publish', course.is_publish? 'Yes' : 'No')}
                 {renderRow('Created At', course.created_at)}
               </div>
             )}

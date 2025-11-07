@@ -17,18 +17,22 @@ interface Props {
   children: React.ReactNode;
   title: string;
   description: string;
-  user: User | null | undefined;
-  userDetails: User | null | undefined | any;
+  
 }
 
 const DashboardLayout: React.FC<Props> = (props: Props) => {
   const pathname = usePathname();
   console.log(getActiveRoute(routes, pathname))
   const [open, setOpen] = React.useState(false);
+  const user = {
+    id: '1',
+    name: 'John Doe',
+    email: 'john@doe',
+  }
 
   return (
-    <UserContext.Provider value={props.user}>
-      <UserDetailsContext.Provider value={props.userDetails}>
+    <UserContext.Provider value={user}>
+      <UserDetailsContext.Provider value={user}>
         <OpenContext.Provider value={{ open, setOpen }}>
           <div className="dark:bg-background-900 flex h-full w-full bg-white">
             <Toaster />

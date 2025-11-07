@@ -31,13 +31,9 @@ import {
 import { mutate } from 'swr';
 import TeachersTable from './table/TeachersTable';
 import { deletTeacher, getTeachers } from '@/hooks/useTeachers';
-interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
-}
 
-export default function TeacherPage(props: Props) {
-  const { user, userDetails } = props;
+
+export default function TeacherPage() {
   const router = useRouter();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [filter, setFilter] = useState({
@@ -78,8 +74,7 @@ export default function TeacherPage(props: Props) {
 
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
+      
       title="Subscription Page"
       description="Manage your subscriptions"
     >

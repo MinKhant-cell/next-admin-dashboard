@@ -40,7 +40,7 @@ export function AssignTeacherDialogForm({id}) {
       <form>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
-      <LuCirclePlus /> Assign Teacher
+      <LuCirclePlus />
     </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">

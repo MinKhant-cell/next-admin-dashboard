@@ -30,13 +30,9 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { mutate } from 'swr';
-interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
-}
 
-export default function StudentsPage(props: Props) {
-  const { user, userDetails } = props;
+
+export default function StudentsPage() {
   const router = useRouter();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [filter, setFilter] = useState({
@@ -77,8 +73,6 @@ export default function StudentsPage(props: Props) {
 
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >

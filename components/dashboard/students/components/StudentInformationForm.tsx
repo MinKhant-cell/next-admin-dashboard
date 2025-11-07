@@ -45,7 +45,6 @@ export function StudentInformationForm({ errors }: any) {
           Name
         </Label>
         <Input
-          id="name"
           {...register('name', {
             required: 'Name is required!',
             minLength: {
@@ -64,7 +63,6 @@ export function StudentInformationForm({ errors }: any) {
           Email
         </Label>
         <Input
-          id="email"
           {...register('email', {
             required: 'Email is required!'
           })}

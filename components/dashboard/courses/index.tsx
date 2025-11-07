@@ -31,27 +31,23 @@ import {
 } from '@/components/ui/select';
 import { mutate } from 'swr';
 import { deleteCourse, getCourses } from '@/hooks/useCourses';
-interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
-}
 
-export default function CoursesPage(props: Props) {
-  const { user, userDetails } = props;
+export default function CoursesPage() {
   const router = useRouter();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [filter, setFilter] = useState({
     search: ''
   });
   const [debouncedSearch, setDebouncedSearch] = useState('');
-
+  const fetchParams = new URLSearchParams({
+    page: String(pagination.pageIndex + 1),
+    limit: String(pagination.pageSize)
+  });
   const { courses, isError, isLoading } = getCourses(
     pagination.pageIndex + 1,
     pagination.pageSize,
     filter
   );
-  console.log(isError)
-  
 
   useEffect(() => {
     const searchHandler = setTimeout(() => {
@@ -63,12 +59,8 @@ export default function CoursesPage(props: Props) {
   const handleCoursesDelete = async (id: number) => {
     const { status, message, error } = await deleteCourse(id);
     if (!error && status == 204) {
-      const params = new URLSearchParams({
-        page: String(pagination.pageIndex + 1),
-        limit: String(pagination.pageSize)
-      });
-      if (filter.search) params.append('search', filter.search);
-      mutate(`/courses?${params.toString()}`);
+      if (filter.search) fetchParams.append('search', filter.search);
+      mutate(`/courses?${fetchParams.toString()}`);
       toast.success(message);
     } else {
       toast.error(message);
@@ -77,14 +69,12 @@ export default function CoursesPage(props: Props) {
 
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >
       <Toaster position="top-right" />
       <div className="min-h-screen w-full">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-5">
           <h1 className="text-xl text-gray-700 font-semibold">Courses List</h1>
           <Link href={'/dashboard/courses/create'}>
             <Button

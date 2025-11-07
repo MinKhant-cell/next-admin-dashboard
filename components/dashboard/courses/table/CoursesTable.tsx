@@ -60,8 +60,9 @@ type RowObj = {
   currency: string;
   status: string;
   created_at: string;
-  teacher?: string;
   menu?: string;
+  employee_id?: number;
+  employee?: any;
 };
 
 function StudentTable(props) {
@@ -112,14 +113,29 @@ function StudentTable(props) {
         </Link>
       )
     }),
-    columnHelper.accessor('teacher', {
-      id: 'teacher',
+    columnHelper.accessor('employee_id', {
+      id: 'employee_id',
       header: () => (
         <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Teacher
         </p>
       ),
-      cell: (info) => <AssignTeacherDialogForm id={info.row.original.id}/>
+      cell: (info) => {
+        const row = info.row.original;
+        return (
+          <div className="flex justify-start w-full items-center gap-[14px]">
+            {info.getValue() ? (
+              <p className="text-xs font-medium text-zinc-950 dark:text-white">
+                {row.employee?.name}
+              </p>
+            ) : (
+              <AssignTeacherDialogForm id={info.row.original.id} />
+            )}
+          </div>
+        );
+      }
+
+      // <AssignTeacherDialogForm id={info.row.original.id}/>
     }),
     columnHelper.accessor('start_date', {
       id: 'start_date',

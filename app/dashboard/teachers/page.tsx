@@ -5,15 +5,7 @@ import { createClient } from '@/utils/supabase/server';
 import { FetchTeachers } from '@/components/dashboard/teachers/hooks/useTeacher';
 
 export default async function Account() {
-  const supabase = createClient();
-  const [user, userDetails] = await Promise.all([
-    getUser(supabase),
-    getUserDetails(supabase),
-  ]);
+ 
 
-  if (!user) {
-    return redirect('/dashboard/signin');
-  }
-
-  return <TeacherList user={user} userDetails={userDetails} />;
+  return <TeacherList />;
 }
