@@ -21,7 +21,7 @@ import {
 } from 'react-icons/hi2';
 import { createClient } from '@/utils/supabase/client';
 
-const supabase = createClient();
+// const supabase = createClient();
 export default function HeaderLinks(props: { [x: string]: any }) {
   const { open, setOpen } = useContext(OpenContext);
   const user = useContext(UserContext);
@@ -39,7 +39,7 @@ export default function HeaderLinks(props: { [x: string]: any }) {
 
   const handleSignOut = async (e) => {
     e.preventDefault();
-    supabase.auth.signOut();
+    // supabase.auth.signOut();
     router.push('/dashboard/signin');
   };
   if (!mounted) return null;

@@ -46,7 +46,7 @@ export const creatCourse = async(student: any) => {
 
 export const updateCourse = async(id: number, student: any) => {
   const result = await CourseAPI.update(id,student);
-  mutate(`/courses`);
+  mutate(`/courses/${id}`);
   return result;
 }
 

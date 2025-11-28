@@ -7,7 +7,11 @@ import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { LuChevronsLeft, LuArrowLeft, LuCircleFadingPlus } from 'react-icons/lu';
+import {
+  LuChevronsLeft,
+  LuArrowLeft,
+  LuCircleFadingPlus
+} from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
 import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
@@ -15,6 +19,7 @@ import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
 import { getStudentById } from '@/hooks/useStudents';
 import { getCourseById } from '@/hooks/useCourses';
+import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
 interface Props {
   id: string | number;
 }
@@ -25,7 +30,8 @@ export default function CourseDetailsPage(props: Props) {
   const statusColors: Record<string, string> = {
     UPCOMING:
       'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
-    ACTIVE: 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
+    ACTIVE:
+      'bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100',
     ONGOING:
       'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900 dark:text-purple-100',
     FULL: 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900 dark:text-orange-100',
@@ -67,42 +73,56 @@ export default function CourseDetailsPage(props: Props) {
       <div className="flex gap-5">
         <div>
           <Link href={'/dashboard/courses'}>
-            <Button className="hover:dark:bg-gray-800 hover:dark:text-white" variant="outline" size="sm">
-              <LuArrowLeft/> 
+            <Button
+              className="hover:dark:bg-gray-800 hover:dark:text-white"
+              variant="outline"
+              size="sm"
+            >
+              <LuArrowLeft />
             </Button>
           </Link>
         </div>
-        <Card className={'h-full py-3 w-full sm:overflow-auto'}>
-          <div className="px-5">
-            <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-              Course Information
-            </h1>
-          </div>
-          <Separator />
+        <div className="w-full">
+          <Card className={'py-3 w-full sm:overflow-auto mb-5'}>
+            <div className="px-5">
+              <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
+                Course Information
+              </h1>
+            </div>
+            <Separator />
 
-          <div className="px-5">
-            {isLoading ? (
-              <p>Loading ...</p>
-            ) : (
-              <div>
-                {/* <p className="text-green-500">
+            <div className="px-5">
+              {isLoading ? (
+                <p>Loading ...</p>
+              ) : (
+                <div>
+                  {/* <p className="text-green-500">
                   {JSON.stringify(course)}
                 </p> */}
-                {renderRow('Name', course.name)}
-                {renderRow('Teacher', course.employee?.name)}
-                {renderRow('Start Date', course.start_date)}
-                {renderRow('End Date', course.end_date)}
-                {renderRow('Duration', course.duration)}
-                {renderRow('Fees', course.fees+' '+course.currency)}
-                {renderRow('Status', course.status)}
-                {renderRow('Description', course.description)}
-                {renderRow('Publish', course.is_publish? 'Yes' : 'No')}
-                {renderRow('Created At', course.created_at)}
-              </div>
-            )}
-          </div>
-        </Card>
+                  {renderRow('Name', course.name)}
+                  {renderRow('Teacher', course.employee?.name)}
+                  {renderRow('Start Date', course.start_date)}
+                  {renderRow('End Date', course.end_date)}
+                  {renderRow('Duration', course.duration)}
+                  {renderRow('Fees', course.fees + ' ' + course.currency)}
+                  {renderRow('Status', course.status)}
+                  {renderRow('Description', course.description)}
+                  {renderRow('Publish', course.is_publish ? 'Yes' : 'No')}
+                  {renderRow('Created At', course.created_at)}
+                </div>
+              )}
+            </div>
+          </Card>
+          <Card className={'py-3 w-full sm:overflow-auto'}>
+            <div className="px-5">
+              
+
+        <AssignTeacherDialogForm id={id} title='Assign Teacher'/>
+            </div>
+          </Card>
+        </div>
       </div>
+      <div></div>
     </DashboardLayout>
   );
 }

@@ -124,13 +124,9 @@ function StudentTable(props) {
         const row = info.row.original;
         return (
           <div className="flex justify-start w-full items-center gap-[14px]">
-            {info.getValue() ? (
-              <p className="text-xs font-medium text-zinc-950 dark:text-white">
+            <p className="text-xs font-medium text-zinc-950 dark:text-white">
                 {row.employee?.name}
               </p>
-            ) : (
-              <AssignTeacherDialogForm id={info.row.original.id} />
-            )}
           </div>
         );
       }

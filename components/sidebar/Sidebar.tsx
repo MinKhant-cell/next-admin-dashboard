@@ -22,7 +22,7 @@ import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import { UserContext, UserDetailsContext } from '@/contexts/layout';
 import { createClient } from '@/utils/supabase/client';
 
-const supabase = createClient();
+// const supabase = createClient();
 
 export interface SidebarProps extends PropsWithChildren {
   routes: IRoute[];
@@ -37,7 +37,7 @@ function Sidebar(props: SidebarProps) {
   const userDetails = useContext(UserDetailsContext);
   const handleSignOut = async (e) => {
     e.preventDefault();
-    supabase.auth.signOut();
+    // supabase.auth.signOut();
     router.push('/dashboard/signin');
   };
   // SIDEBAR
@@ -70,7 +70,7 @@ function Sidebar(props: SidebarProps) {
                   <HiMiniBuildingLibrary className="h-5 w-5" />
                 </div>
                 <h5 className="me-2 text-2xl font-bold leading-5 text-zinc-950 dark:text-white">
-                  Name
+                  {process.env.NEXT_PUBLIC_APP_NAME || 'Dashboard'}
                 </h5>
               </div>
               <div className="mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10" />

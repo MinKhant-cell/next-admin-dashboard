@@ -71,9 +71,9 @@ export default function RootLayout({
       </head>
       <body id={'root'} className="loading bg-white">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SupabaseProvider>
+          {/* <SupabaseProvider> */}
             <main id="skip">{children}</main>
-          </SupabaseProvider>
+          {/* </SupabaseProvider> */}
         </ThemeProvider>
       </body>
     </html>

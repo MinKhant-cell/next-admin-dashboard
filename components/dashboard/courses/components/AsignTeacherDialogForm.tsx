@@ -19,8 +19,9 @@ import { UpdateCourse } from "../hooks/useCourses"
 import { updateCourse } from "@/hooks/useCourses"
 import { toast } from "sonner"
 
-export function AssignTeacherDialogForm({id}) {
+export function AssignTeacherDialogForm({id, title='', description=''}) {
     const [teacherId, selectTeacherId] = useState("");
+const [open, setOpen] = useState(false);
 
     const assignTeacher = async (e) => {
         e.preventDefault();
@@ -30,17 +31,17 @@ export function AssignTeacherDialogForm({id}) {
         const {data, message, status, error} = await updateCourse(id,updateData);
         if(!error && status == 200) {
             toast.success(message);
+            setOpen(false)
         }else {
           toast.error(message);
         }
-        
     }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <form>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm">
-      <LuCirclePlus />
+      <LuCirclePlus /> {title ?? ''}
     </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
