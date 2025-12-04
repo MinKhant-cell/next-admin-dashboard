@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { getStudentById } from '@/hooks/useStudents';
 import { getCourseById } from '@/hooks/useCourses';
 import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
+import { AssignStudentDialogForm } from '../components/AsignStudentDialogForm';
 interface Props {
   id: string | number;
 }
@@ -100,7 +101,7 @@ export default function CourseDetailsPage(props: Props) {
                   {JSON.stringify(course)}
                 </p> */}
                   {renderRow('Name', course.name)}
-                  {renderRow('Teacher', course.employee?.name)}
+                  {/* {renderRow('Teacher', course.employee?.name)} */}
                   {renderRow('Start Date', course.start_date)}
                   {renderRow('End Date', course.end_date)}
                   {renderRow('Duration', course.duration)}
@@ -113,11 +114,31 @@ export default function CourseDetailsPage(props: Props) {
               )}
             </div>
           </Card>
-          <Card className={'py-3 w-full sm:overflow-auto'}>
+          <Card className={'py-3 mb-5 w-full sm:overflow-auto'}>
+            <div className="px-5">
+              <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
+                Teachers
+              </h1>
+            </div>
+            <Separator />
             <div className="px-5">
               
 
         <AssignTeacherDialogForm id={id} title='Assign Teacher'/>
+
+                  {/* {renderRow('Teacher', course.employee?.name)} */}
+
+            </div>
+          </Card>
+          <Card className={'py-3 mb-5 w-full sm:overflow-auto'}>
+            <div className="px-5">
+              <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
+                Students
+              </h1>
+            </div>
+            <Separator />
+            <div className="px-5">
+        <AssignStudentDialogForm id={id} title='Assign Student'/>
             </div>
           </Card>
         </div>

@@ -8,10 +8,7 @@ type Teacher = {
   phone_number: string;
 }
 
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+
 
 export const InsertTeacher = async (teacherData: Teacher) => {
   const { data, error } = await supabase.from('teachers').insert([teacherData]);

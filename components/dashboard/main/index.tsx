@@ -6,7 +6,11 @@ import MainDashboardTable from '@/components/dashboard/main/cards/MainDashboardT
 import DashboardLayout from '@/components/layout';
 import tableDataUserReports from '@/variables/tableDataUserReports';
 import { User } from '@supabase/supabase-js';
-
+import TeacherStautsOverviewChart from './cards/TeacherStautsOverviewChart';
+import DashboardWidget from './cards/DashboardWidget';
+import FeeCollectionChart from './cards/FeeCollectionChart';
+import AdmissionOverviewChart from './cards/AdmissionOverviewChart';
+import CourseOverviewChart from './cards/CourseOverviewChart';
 
 export default function Settings() {
   return (
@@ -15,12 +19,21 @@ export default function Settings() {
       description="Manage your subscriptions"
     >
       <div className="h-full w-full">
-        <div className="mb-5 flex gap-5 flex-col xl:flex-row w-full">
-          <MainChart />
+        <div className="flex gap-5 justify-between mb-5">
+          <DashboardWidget title="Total Revenue" value="$45,231" />
+          <DashboardWidget title="Total Expense" value="$12,231" />
+          <DashboardWidget title="Total Teachers" value="20" />
+          <DashboardWidget title="Total Students" value="150" />
         </div>
-        {/* Conversion and talbes*/}
-        <div className="h-full w-full rounded-lg ">
-          <MainDashboardTable tableData={tableDataUserReports} />
+        <div className="flex gap-5 justify-between mb-5">
+          <TeacherStautsOverviewChart />
+          <CourseOverviewChart />
+          <TeacherStautsOverviewChart />
+
+        </div>
+        <div className="flex gap-5">
+          <FeeCollectionChart/>
+          <AdmissionOverviewChart/>
         </div>
       </div>
     </DashboardLayout>

@@ -13,11 +13,8 @@ import { InsertCourse } from '../hooks/useCourses';
 import { CourseInformationForm } from '../components/CourseInformationForm';
 import { CourseReviewForm } from '../components/CourseReviewForm';
 import { CourseSettingsForm } from '../components/CourseSettingsForm';
-import { User } from '@supabase/supabase-js';
 
 interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
   teachers: null | any;
 }
 
@@ -36,7 +33,7 @@ type CourseType = {
 };
 
 export default function Page(props: Props) {
-  const { user, userDetails, teachers } = props;
+  const { teachers } = props;
   const router = useRouter();
   const methods = useForm<CourseType>();
   const {
@@ -84,8 +81,6 @@ export default function Page(props: Props) {
 
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >

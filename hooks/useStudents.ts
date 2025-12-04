@@ -35,6 +35,18 @@ export function useStudents(page = 1, limit = 10) {
   };
 }
 
+export const getAllStudents = () => {
+  const { data, error, isLoading } = useSWR(
+     `/students`,
+    fetcher
+  );
+  return {
+    students: data ?? [],
+    isLoading,
+    isError: error,
+  };
+}
+
 export const getStudents = (page = 1, limit = 10, filter) => {
 
   const params = new URLSearchParams({
