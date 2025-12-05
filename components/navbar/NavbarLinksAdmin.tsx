@@ -28,6 +28,7 @@ export default function HeaderLinks(props: { [x: string]: any }) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const router = getRedirectMethod() === 'client' ? useRouter() : null;
+
   const onOpen = () => {
     setOpen(false);
   };
@@ -75,7 +76,7 @@ export default function HeaderLinks(props: { [x: string]: any }) {
       <a className="w-full" href="/dashboard/settings">
         <Avatar className="h-9 min-w-9 md:min-h-10 md:min-w-10">
           {/* <AvatarImage src={user?.user_metadata.avatar_url} /> */}
-          <AvatarFallback className="font-bold">
+          <AvatarFallback className="font-medium">
             {user?.name}
           </AvatarFallback>
         </Avatar>

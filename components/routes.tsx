@@ -12,7 +12,9 @@ import {
   HiOutlineUserCircle,
   HiOutlineUserPlus,
   HiOutlineBuildingOffice,
-  HiOutlineBookOpen
+  HiOutlineBookOpen,
+  HiCalendar,
+  HiOutlineCalendar
 } from 'react-icons/hi2';
 
 export const routes: IRoute[] = [
@@ -20,6 +22,24 @@ export const routes: IRoute[] = [
     name: 'Dashboard',
     path: '/dashboard/main',
     icon: <HiOutlineHome className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    collapse: false
+  },
+  {
+    name: 'Classrooms List',
+    path: '/dashboard/classrooms',
+    icon: <HiOutlineHome className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    collapse: false
+  },
+  {
+    name: 'Courses List',
+    path: '/dashboard/courses',
+    icon: <HiOutlineBookOpen className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    collapse: false
+  },
+  {
+    name: 'Subjects List',
+    path: '/dashboard/subjects',
+    icon: <HiOutlineBookOpen className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
    {
@@ -34,10 +54,11 @@ export const routes: IRoute[] = [
     icon: <HiOutlineUsers className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
+  
   {
-    name: 'Courses List',
-    path: '/dashboard/courses',
-    icon: <HiOutlineBookOpen className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    name: 'Calendar',
+    path: '/dashboard/calendar',
+    icon: <HiOutlineCalendar className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
   // {

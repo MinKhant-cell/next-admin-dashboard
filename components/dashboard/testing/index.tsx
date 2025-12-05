@@ -9,7 +9,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 
 
 export default function TeacherPage() {
-    const events = [
+    const eventsList = [
   {
     id: 1,
     title: "Math — Algebra",
@@ -81,7 +81,7 @@ export default function TeacherPage() {
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}
         initialView="dayGridMonth"
-        events={events}
+        events={eventsList}
         height="auto"
       />
     </div>
