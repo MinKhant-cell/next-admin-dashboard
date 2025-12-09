@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { IRoute } from '@/types/types';
 import { useRouter } from 'next/navigation';
-import React, { PropsWithChildren, useContext } from 'react';
+import React, { PropsWithChildren, useContext, useState, forwardRef } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { HiX } from 'react-icons/hi';
 import { HiMiniBuildingLibrary } from 'react-icons/hi2';
@@ -29,9 +29,15 @@ export interface SidebarProps extends PropsWithChildren {
   [x: string]: any;
 }
 
-function Sidebar(props: SidebarProps) {
+const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(function Sidebar(
+  props,
+  ref
+)
+{
+
   const router = getRedirectMethod() === 'client' ? useRouter() : null;
-  const { routes } = props;
+  const { routes, collapsed, setCollapsed } = props;
+
 
   const user = useContext(UserContext);
   const userDetails = useContext(UserDetailsContext);
@@ -43,12 +49,15 @@ function Sidebar(props: SidebarProps) {
   // SIDEBAR
   return (
     <div
-      className={`lg:!z-99 fixed !z-[99] min-h-full w-[300px] transition-all md:!z-[99] xl:!z-0 ${
-        props.variant === 'auth' ? 'xl:hidden' : 'xl:block'
-      } ${props.open ? '' : '-translate-x-[120%] xl:translate-x-[unset]'}`}
+    ref={ref}
+      className={`lg:!z-99 !z-[99] min-h-full transition-all md:!z-[99] xl:!z-0 
+    ${props.variant === 'auth' ? 'xl:hidden' : 'xl:block'}
+    ${props.open ? '' : '-translate-x-[120%] xl:translate-x-[unset]'}
+    ${collapsed ? 'w-[80px]' : 'w-[300px]'}
+  `}
     >
       <Card
-        className={`m-3 ml-3 h-[96.5vh] w-full overflow-hidden !rounded-lg border-zinc-200 pe-4 dark:border-zinc-800 sm:my-4 sm:mr-4 md:m-5 md:mr-[-50px]`}
+        className={`h-full w-full overflow-hidden rounded-none border-0 border-r border-zinc-200 pe-0 dark:border-zinc-800 sm:my-0 sm:mr-0 md:m-0 md:mr-0`}
       >
         <Scrollbars
           autoHide
@@ -65,18 +74,33 @@ function Sidebar(props: SidebarProps) {
               >
                 <HiX />
               </span>
-              <div className={`mt-8 flex items-center justify-center`}>
+              <div className={`mt-8 relative flex items-center justify-center`}>
                 <div className="me-2 flex h-[40px] w-[40px] items-center justify-center rounded-md bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
                   <HiMiniBuildingLibrary className="h-5 w-5" />
                 </div>
-                <h5 className="me-2 text-2xl font-bold leading-5 text-zinc-950 dark:text-white">
-                  {process.env.NEXT_PUBLIC_APP_NAME || 'Dashboard'}
-                </h5>
+               {!collapsed && (
+    <h5 className="text-xl font-bold text-zinc-950 dark:text-white">
+      {process.env.NEXT_PUBLIC_APP_NAME || 'Dashboard'}
+    </h5>
+  )}
+                <div className="absolute right-0 bottom-0">
+  <Button
+    variant="ghost"
+    size="icon"
+    onClick={() => setCollapsed(!collapsed)}
+  >
+    {collapsed ? (
+      <HiOutlineArrowRightOnRectangle className="h-5 w-5" />
+    ) : (
+      <HiX className="h-5 w-5" />
+    )}
+  </Button>
+</div>
               </div>
               <div className="mb-8 mt-8 h-px bg-zinc-200 dark:bg-white/10" />
               {/* Nav item */}
               <ul>
-                <Links routes={routes} />
+                <Links routes={routes} collapsed={collapsed}/>
               </ul>
             </div>
             
@@ -86,6 +110,7 @@ function Sidebar(props: SidebarProps) {
     </div>
   );
 }
+)
 
 // PROPS
 

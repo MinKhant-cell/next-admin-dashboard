@@ -9,12 +9,13 @@ import { PropsWithChildren, useCallback } from 'react';
 interface SidebarLinksProps extends PropsWithChildren {
   routes: IRoute[];
   [x: string]: any;
+  collapsed?: boolean;
 }
 
 export function SidebarLinks(props: SidebarLinksProps) {
   const pathname = usePathname();
 
-  const { routes } = props;
+  const { routes, collapsed } = props;
 
   // verifies if routeName is the one active (in browser input)
   const activeRoute = useCallback(
@@ -81,7 +82,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                     >
                       {route.icon}
                     </div>
-                    <p
+                    {!collapsed && <p
                       className={`mr-auto text-sm ${
                         activeRoute(route.path.toLowerCase())
                           ? 'font-semibold text-white dark:text-zinc-950'
@@ -89,7 +90,8 @@ export function SidebarLinks(props: SidebarLinksProps) {
                       }`}
                     >
                       {route.name}
-                    </p>
+                    </p>}
+                    
                   </div>
                 </div>
               </NavLink>

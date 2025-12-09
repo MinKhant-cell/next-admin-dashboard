@@ -2,9 +2,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export async function apiClient(url: string, options: RequestInit = {}) {
   const res = await fetch(`${BASE_URL}${url}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
     ...options,
   });
 

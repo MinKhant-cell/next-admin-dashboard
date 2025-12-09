@@ -125,7 +125,7 @@ export default function TeacherPage() {
               </Select>
             </div>
 
-            <div>
+            {/* <div>
               <Select
                 value={filter.gender}
                 onValueChange={(value) =>
@@ -146,7 +146,7 @@ export default function TeacherPage() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="w-full rounded-lg ">

@@ -21,13 +21,14 @@ import { getStudentById } from '@/hooks/useStudents';
 import { getCourseById } from '@/hooks/useCourses';
 import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
 import { AssignStudentDialogForm } from '../components/AsignStudentDialogForm';
+import { getSubjectById } from '@/hooks/useSubject';
 interface Props {
   id: string | number;
 }
 
-export default function CourseDetailsPage(props: Props) {
+export default function SubjectDetailsPage(props: Props) {
   const { id } = props;
-  const { course, isLoading, isError } = getCourseById(id);
+  const { subject, isLoading, isError } = getSubjectById(id);
   const statusColors: Record<string, string> = {
     UPCOMING:
       'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900 dark:text-blue-100',
@@ -73,7 +74,7 @@ export default function CourseDetailsPage(props: Props) {
       <Toaster position="top-right" />
       <div className="flex gap-5">
         <div>
-          <Link href={'/dashboard/courses'}>
+          <Link href={'/dashboard/subjects'}>
             <Button
               className="hover:dark:bg-gray-800 hover:dark:text-white"
               variant="outline"
@@ -87,7 +88,7 @@ export default function CourseDetailsPage(props: Props) {
           <Card className={'py-3 w-full sm:overflow-auto mb-5'}>
             <div className="px-5">
               <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-                Course Information
+                Subject Information
               </h1>
             </div>
             <Separator />
@@ -97,11 +98,10 @@ export default function CourseDetailsPage(props: Props) {
                 <p>Loading ...</p>
               ) : (
                 <div>
-                  {/* <p className="text-green-500">
-                  {JSON.stringify(course)}
-                </p> */}
-                  {renderRow('Name', course.name)}
-                  {/* {renderRow('Teacher', course.employee?.name)} */}
+                  <p className="text-green-500">
+                  {JSON.stringify(subject)}
+                </p>
+                  {/* {renderRow('Name', course.name)}
                   {renderRow('Start Date', course.start_date)}
                   {renderRow('End Date', course.end_date)}
                   {renderRow('Duration', course.duration)}
@@ -109,38 +109,12 @@ export default function CourseDetailsPage(props: Props) {
                   {renderRow('Status', course.status)}
                   {renderRow('Description', course.description)}
                   {renderRow('Publish', course.is_publish ? 'Yes' : 'No')}
-                  {renderRow('Created At', course.created_at)}
+                  {renderRow('Created At', course.created_at)} */}
                 </div>
               )}
             </div>
           </Card>
-          <Card className={'py-3 mb-5 w-full sm:overflow-auto'}>
-            <div className="px-5">
-              <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-                Teachers
-              </h1>
-            </div>
-            <Separator />
-            <div className="px-5">
-              
-
-        <AssignTeacherDialogForm id={id} title='Assign Teacher'/>
-
-                  {/* {renderRow('Teacher', course.employee?.name)} */}
-
-            </div>
-          </Card>
-          <Card className={'py-3 mb-5 w-full sm:overflow-auto'}>
-            <div className="px-5">
-              <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-                Students
-              </h1>
-            </div>
-            <Separator />
-            <div className="px-5">
-        <AssignStudentDialogForm id={id} title='Assign Student'/>
-            </div>
-          </Card>
+          
         </div>
       </div>
       <div></div>

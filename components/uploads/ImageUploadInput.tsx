@@ -11,7 +11,7 @@ import {
   EmptyContent,
 } from "@/components/ui/empty";
 
-export function ImageUploadInput({ onChange }) {
+export function ImageUploadInput({ value, onChange }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [file, setFile] = useState<File | null>(null);
@@ -54,9 +54,7 @@ export function ImageUploadInput({ onChange }) {
   return (
     <div>
       {!previewUrl ? (
-        // ===========================
-        // Empty State (No Image Yet)
-        // ===========================
+
         <Empty
           className="border border-dashed cursor-pointer"
           onClick={openFilePicker}
@@ -79,9 +77,7 @@ export function ImageUploadInput({ onChange }) {
           />
         </Empty>
       ) : (
-        // ===========================
-        // Preview Mode (Image Selected)
-        // ===========================
+       
         <div className="relative border rounded-lg p-2 flex gap-4 items-center">
           <img
             src={previewUrl}

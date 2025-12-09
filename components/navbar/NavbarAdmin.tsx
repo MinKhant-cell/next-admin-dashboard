@@ -6,12 +6,13 @@ import NavbarBreadcrumb from './NavbarBreadcrumb';
 export default function AdminNavbar(props: {
   brandText: string;
   [x: string]: any;
+  collapsed?: boolean;
 }) {
-  const { brandText } = props;
+  const { brandText, collapsed } = props;
 
   return (
     <nav
-      className={`fixed border right-3 top-3 z-[0] flex w-[calc(100vw_-_6%)] flex-row items-center justify-between rounded-lg bg-white/30 py-2 backdrop-blur-xl transition-all dark:bg-transparent md:right-[30px] md:top-4 md:w-[calc(100vw_-_8%)] md:p-2 lg:w-[calc(100vw_-_6%)] xl:top-[20px] xl:w-[calc(100vw_-_365px)] 2xl:w-[calc(100vw_-_380px)]`}
+      className={`${collapsed ? 'w-[calc(100vw-80px)]' : 'w-[calc(100vw-300px)]'} fixed border-none right-0 top-0 z-[0] flex flex-row items-center justify-between rounded-none bg-white py-2 transition-all dark:bg-transparent md:p-2 `}
     >
       <div className="">
         <div className="h-6 md:mb-2 text-xs md:pt-1">

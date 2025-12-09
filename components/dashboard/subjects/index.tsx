@@ -26,7 +26,8 @@ import {
 } from '@/components/ui/select';
 import { mutate } from 'swr';
 import { deleteCourse, getCourses } from '@/hooks/useCourses';
-import ClassroomTable from './table/ClassroomsTable';
+import SubjectsTable from './table/SubjectsTable';
+import { getSubjects } from '@/hooks/useSubject';
 
 export default function SubjectsPage() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function SubjectsPage() {
     page: String(pagination.pageIndex + 1),
     limit: String(pagination.pageSize)
   });
-  const { courses, isError, isLoading } = getCourses(
+  const { subjects, isError, isLoading } = getSubjects(
     pagination.pageIndex + 1,
     pagination.pageSize,
     filter
@@ -82,70 +83,14 @@ export default function SubjectsPage() {
             </Button>
           </Link>
         </div>
-        <div className="flex justify-between mb-3">
-          <div>
-            <InputGroup>
-              <InputGroupInput
-                onChange={(e) => setDebouncedSearch(e.target.value)}
-                value={debouncedSearch}
-                placeholder="Search..."
-              />
-              <InputGroupAddon>
-                <Search />
-              </InputGroupAddon>
-            </InputGroup>
-          </div>
-
-          <div className="flex gap-3 items-center">
-            <div>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem className="text-gray-800" value="ACTIVE">
-                      ACTIVE
-                    </SelectItem>
-                    <SelectItem className="text-gray-800" value="INACTIVE">
-                      INACTIVE
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* <div>
-              <Select
-                value={filter.gender}
-                onValueChange={(value) =>
-                  setFilter((prev) => ({ ...prev, gender: value }))
-                }
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem className="text-gray-800" value="MALE">
-                      MALE
-                    </SelectItem>
-                    <SelectItem className="text-gray-800" value="FEMALE">
-                      FEMALE
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div> */}
-          </div>
-        </div>
+       
         <div className="w-full rounded-lg ">
           {isLoading ? (
             <TableSkeletons />
           ) : (
-            <ClassroomTable
-              data={courses.data || []}
-              totalCount={courses.meta?.total || 0}
+            <SubjectsTable
+              data={subjects.data || []}
+              totalCount={subjects.meta?.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
               onDelete={handleCoursesDelete}

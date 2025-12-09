@@ -39,7 +39,7 @@ function ActionDropdown(props: {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link
-                href={`/dashboard/courses/edit/${id}`}
+                href={`/dashboard/subjects/edit/${id}`}
                 className="flex items-center gap-2 text-zinc-800 hover:font-medium hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white"
               >
                 <LuSquarePen />

@@ -65,7 +65,7 @@ type RowObj = {
   employee?: any;
 };
 
-function ClassroomTable(props) {
+function SubjectsTable(props) {
   const { onDelete, data, totalCount, onPaginationChange, pagination } = props;
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -142,126 +142,37 @@ function ClassroomTable(props) {
         </p>
       ),
       cell: (info) => (
-        <Link href={`/dashboard/courses/${info.row.original.id}`}>
+        <Link href={`/dashboard/subjects/${info.row.original.id}`}>
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>
         </Link>
       )
     }),
-    columnHelper.accessor('employee_id', {
-      id: 'employee_id',
-      header: () => (
-        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
-          Teacher
-        </p>
-      ),
-      cell: (info) => {
-        const row = info.row.original;
-        return (
-          <div className="flex justify-start w-full items-center gap-[14px]">
-            <p className="text-xs font-medium text-zinc-950 dark:text-white">
-              {row.employee?.name}
-            </p>
-          </div>
-        );
-      }
+   
 
-      // <AssignTeacherDialogForm id={info.row.original.id}/>
-    }),
-    columnHelper.accessor('start_date', {
-      id: 'start_date',
-      header: () => (
-        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
-          Start Date
-        </p>
-      ),
-      cell: (info: any) => {
-        const row = info.row.original;
-        return (
-          <div className="flex justify-start w-full items-center gap-[14px]">
-            <p className="text-xs font-medium text-zinc-950 dark:text-white">
-              {info.getValue()
-                ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
-                : '-'}
-            </p>
-          </div>
-        );
-      }
-    }),
-
-    columnHelper.accessor('end_date', {
-      id: 'end_date',
-      header: () => (
-        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
-          End date
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full justify-start items-center gap-3">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()
-              ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
-              : '-'}
-          </p>
-        </div>
-      )
-    }),
-
-    columnHelper.accessor('duration', {
-      id: 'duration',
-      header: () => (
-        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
-          Duration
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full justify-start items-center gap-3">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
-          </p>
-        </div>
-      )
-    }),
-
-    columnHelper.accessor('fees', {
-      id: 'fees',
-      header: () => (
-        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
-          Fees
-        </p>
-      ),
-      cell: (info: any) => (
-        <div className="flex w-full justify-start items-center gap-3">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()}
-          </p>
-        </div>
-      )
-    }),
-
-    columnHelper.accessor('status', {
-      id: 'status',
-      header: () => (
-        <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-          Status
-        </p>
-      ),
-      cell: (info: any) => {
-        const value = info.getValue()?.toLowerCase();
-        const colorClass = statusColors[value] || 'bg-zinc-100 text-zinc-800';
-        return (
-          <div className="flex w-full justify-center items-center gap-[14px]">
-            <Badge
-              variant="outline"
-              className={`${colorClass} capitalize font-medium`}
-            >
-              {value}
-            </Badge>
-          </div>
-        );
-      }
-    }),
+    // columnHelper.accessor('status', {
+    //   id: 'status',
+    //   header: () => (
+    //     <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+    //       Status
+    //     </p>
+    //   ),
+    //   cell: (info: any) => {
+    //     const value = info.getValue()?.toLowerCase();
+    //     const colorClass = statusColors[value] || 'bg-zinc-100 text-zinc-800';
+    //     return (
+    //       <div className="flex w-full justify-center items-center gap-[14px]">
+    //         <Badge
+    //           variant="outline"
+    //           className={`${colorClass} capitalize font-medium`}
+    //         >
+    //           {value}
+    //         </Badge>
+    //       </div>
+    //     );
+    //   }
+    // }),
 
     columnHelper.accessor('created_at', {
       id: 'created_at',
@@ -451,5 +362,5 @@ function ClassroomTable(props) {
   );
 }
 
-export default ClassroomTable;
+export default SubjectsTable;
 const columnHelper = createColumnHelper<RowObj>();
