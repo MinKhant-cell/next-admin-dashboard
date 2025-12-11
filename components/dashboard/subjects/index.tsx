@@ -84,6 +84,21 @@ export default function SubjectsPage() {
             </Button>
           </Link>
         </div>
+         <div className="flex justify-between mb-3">
+                  <div>
+                    <InputGroup>
+                      <InputGroupInput
+                        onChange={(e) => setDebouncedSearch(e.target.value)}
+                        value={debouncedSearch}
+                        placeholder="Search..."
+                      />
+                      <InputGroupAddon>
+                        <Search />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
+        
+                </div>
        
         <div className="w-full rounded-lg ">
           {isLoading ? (

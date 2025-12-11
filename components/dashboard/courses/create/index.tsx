@@ -5,143 +5,176 @@ import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import React, { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Controller, useForm, FormProvider } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { InsertCourse } from '../hooks/useCourses';
-import { CourseInformationForm } from '../components/CourseInformationForm';
-import { CourseReviewForm } from '../components/CourseReviewForm';
-import { CourseSettingsForm } from '../components/CourseSettingsForm';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
+import { Spinner } from "@/components/ui/spinner"
+import { creatSubject } from '@/hooks/useSubject';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel
+} from '@/components/ui/field';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea
+} from '@/components/ui/input-group';
+import Link from 'next/link';
+import { LuArrowLeft } from 'react-icons/lu';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
 
-interface Props {
-  teachers: null | any;
-}
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(5, "Name must be at least 5 characters.")
+    .max(32, "Name must be at most 32 characters."),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters.")
+    .max(100, "Description must be at most 100 characters.")
+    .optional(),
+  image: z
+    .instanceof(File)
+    .nullable()
+    .optional()
+})
 
-type CourseType = {
-  name: string;
-  start_date: string;
-  end_date: string;
-  description?: string;
-  fees: string;
-  currency: string;
-  status: string;
-  teacher_id?: string;
-  is_publish?: boolean;
-  photo_url?: string;
-  duration?: string;
-};
-
-export default function Page(props: Props) {
-  const { teachers } = props;
+export default function CourseCreatePage() {
   const router = useRouter();
-  const methods = useForm<CourseType>();
-  const {
-    handleSubmit,
-    reset,
-    watch,
-    trigger,
-    formState: { errors, isSubmitting }
-  } = methods;
-
-  const [step, setStep] = useState(1);
-  const totalSteps = 3;
-  const formData = watch();
-
-  function getStepFields(step: number): (keyof CourseType)[] {
-    switch (step) {
-      case 1:
-        return ['name','teacher_id','start_date','end_date','fees'];
-      case 2:
-        return ['status'];
-      default:
-        return [];
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      image: null
     }
+  });
+
+  async function onSubmit(subject: z.infer<typeof formSchema>) {
+      const formData = new FormData();
+      formData.append("name", subject.name);
+      formData.append("description", subject.description);
+
+      if (subject.image instanceof File) {
+        formData.append("image", subject.image);
+      }
+    const {error, data, status} = await creatSubject(formData);
+        if(!error){
+          toast.success("Subject Created Successfully 🎉");
+          form.reset();
+          router.push('/dashboard/subjects')
+        }else {
+          toast.error("Something went wrong 😢");
+        }
   }
-
-  const nextStep = async () => {
-    const valid = await trigger(getStepFields(step));
-    if (valid) setStep((prev) => Math.min(prev + 1, totalSteps));
-  };
-
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
-
-  const handleCreate = async (course: CourseType) => {
-    const { error, data } = await InsertCourse(course);
-    if (!error) {
-      toast.success('Course created successfully 🎉');
-      reset();
-      router.refresh();
-      router.push('/dashboard/courses');
-    } else {
-      console.log(error);
-      toast.error('Something went wrong 😢');
-    }
-  };
 
   return (
     <DashboardLayout
       title="Subscription Page"
       description="Manage your subscriptions"
     >
-      <Toaster position="top-right" />
-      <div className="h-full w-full">
-        <div className="h-full w-full rounded-lg ">
+      <div className="h-full w-full flex gap-5">
+        <LinkBackButton href="/dashboard/subjects" />
+        <div className="h-full w-full">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(handleCreate)}>
-                <div className="mb-7">
-                  <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-                    Create New Course
-                  </h1>
-                  <div className="text-sm font-medium text-gray-600 mb-1">
-                    Step {step} of {totalSteps}
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${(step / totalSteps) * 100}%` }}
-                    />
-                  </div>
-                </div>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {step === 1 && (
-                      <CourseInformationForm
-                        teachers={teachers}
-                        errors={errors}
-                      />
-                    )}
-                    {step === 2 && <CourseSettingsForm errors={errors} />}
-                    {step === 3 && <CourseReviewForm data={formData} />}
-                  </motion.div>
-                </AnimatePresence>
+          <div className="mb-5">
+<h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
+            Create Subject
+          </h1>
+          </div>
+          
+            <form id="subject-create-form" onSubmit={form.handleSubmit(onSubmit)}>
+              <FieldGroup>
+                <Controller
+                  name="name"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="text-gray-600 dark:text-zinc-200"
+                        htmlFor="name"
+                      >
+                        Name
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="name"
+                        placeholder="Enter Name"
 
-                <div className="flex justify-between pt-4">
-                  {step > 1 && (
-                    <Button size="sm" type="button" variant="outline" onClick={prevStep}>
-                      Back
-                    </Button>
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                  {step < totalSteps && (
-                    <Button size="sm" type="button" onClick={nextStep}>
-                      Next
-                    </Button>
+                />
+                <Controller
+                  name="description"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="text-gray-600 dark:text-zinc-200"
+                        htmlFor="description"
+                      >
+                        Description
+                      </FieldLabel>
+                      <InputGroup>
+                        <InputGroupTextarea
+                          {...field}
+                          id="description"
+                          placeholder="Enter Description"
+                          rows={3}
+                          className="min-h-24 resize-none"
+                        />
+                      </InputGroup>
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                  {step === totalSteps && (
-                    <Button size="sm" type="submit" className="bg-green-600 text-white">
-                      Submit
-                    </Button>
+                />
+                <Controller
+                  name="image"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="text-gray-600 dark:text-zinc-200"
+                        htmlFor="image"
+                      >
+                        Image Upload
+                      </FieldLabel>
+                      <ImageUploadInput value={field.value} onChange={field.onChange} />
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                </div>
-              </form>
-            </FormProvider>
+                />
+              </FieldGroup>
+              <div className="my-5">
+                <Button
+  type="submit"
+  form="subject-create-form"
+  disabled={form.formState.isSubmitting}
+>
+  {form.formState.isSubmitting && <Spinner />}
+  Create
+</Button>
+              </div>
+            </form>
           </Card>
         </div>
       </div>
