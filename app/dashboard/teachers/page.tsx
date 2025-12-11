@@ -1,11 +1,5 @@
-import TeacherList from '@/components/dashboard/teachers';
-import { redirect } from 'next/navigation';
-import { getUserDetails, getUser } from '@/utils/supabase/queries';
-import { createClient } from '@/utils/supabase/server';
-import { FetchTeachers } from '@/components/dashboard/teachers/hooks/useTeacher';
+import TeachersPage from '@/components/dashboard/teachers';
 
-export default async function Account() {
- 
-
-  return <TeacherList />;
+export default async function Teachers() {
+  return <TeachersPage />;
 }

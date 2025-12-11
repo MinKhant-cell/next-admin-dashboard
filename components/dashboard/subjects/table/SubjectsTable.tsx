@@ -32,6 +32,8 @@ import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
 import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
+import TimeContainer from '@/components/ui-components/TimeContainer';
+import DateContainer from '@/components/ui-components/DateContainer';
 
 const statusColors: Record<string, string> = {
   upcoming:
@@ -177,17 +179,14 @@ function SubjectsTable(props) {
     columnHelper.accessor('created_at', {
       id: 'created_at',
       header: () => (
-        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Created At
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex justify-end w-full items-center gap-[14px]">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()
-              ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
-              : '-'}
-          </p>
+        <div className="flex flex-col items-start gap-3">
+          <DateContainer value={info.getValue()} />
+          <TimeContainer value={info.getValue()} />
         </div>
       )
     }),

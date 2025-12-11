@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useRef, useState } from "react";
-import { ImagePlus, Trash2 } from "lucide-react";
+import { useRef, useState } from 'react';
+import { ImagePlus, Trash2 } from 'lucide-react';
 
 import {
   Empty,
   EmptyHeader,
   EmptyMedia,
   EmptyDescription,
-  EmptyContent,
-} from "@/components/ui/empty";
+  EmptyContent
+} from '@/components/ui/empty';
 
 export function ImageUploadInput({ value, onChange }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -26,14 +26,12 @@ export function ImageUploadInput({ value, onChange }) {
     if (!selected) return;
 
     // Validate image
-    if (!selected.type.startsWith("image/")) {
-      alert("Only image files are allowed.");
+    if (!selected.type.startsWith('image/')) {
+      alert('Only image files are allowed.');
       return;
     }
-
     setFile(selected);
     setPreviewUrl(URL.createObjectURL(selected));
-
     onChange && onChange(selected);
   };
 
@@ -41,20 +39,18 @@ export function ImageUploadInput({ value, onChange }) {
     setFile(null);
     setPreviewUrl(null);
     onChange && onChange(null);
-
-    if (inputRef.current) inputRef.current.value = "";
+    if (inputRef.current) inputRef.current.value = '';
   };
 
   const formatSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
   return (
     <div>
       {!previewUrl ? (
-
         <Empty
           className="border border-dashed cursor-pointer"
           onClick={openFilePicker}
@@ -63,9 +59,7 @@ export function ImageUploadInput({ value, onChange }) {
             <EmptyMedia variant="icon">
               <ImagePlus />
             </EmptyMedia>
-            <EmptyDescription>
-              Click here to upload image
-            </EmptyDescription>
+            <EmptyDescription>Click here to upload image</EmptyDescription>
           </EmptyHeader>
 
           <input
@@ -77,19 +71,16 @@ export function ImageUploadInput({ value, onChange }) {
           />
         </Empty>
       ) : (
-       
         <div className="relative border rounded-lg p-2 flex gap-4 items-center">
           <img
             src={previewUrl}
             alt="preview"
             className="w-24 h-24 rounded-md object-cover border"
           />
-
           <div className="flex flex-col text-sm">
             <p className="font-medium">{file?.name}</p>
             <p className="text-gray-500">{formatSize(file?.size || 0)}</p>
           </div>
-
           <button
             onClick={handleRemove}
             className="ml-auto text-red-500 hover:text-red-700"

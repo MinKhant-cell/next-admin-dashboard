@@ -61,7 +61,7 @@ function ActionDropdown(props: {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ConfirmDialog isOpen={confirmDialogOpen} onOpenChange={setConfirmDialogOpen} title='Delete Course' description='Please Confirm to Delete!' onConfirm={()=>onDelete(id)}/>
+      <ConfirmDialog isOpen={confirmDialogOpen} onOpenChange={setConfirmDialogOpen} title='Delete Subject' description='Please Confirm to Delete!' onConfirm={()=>onDelete(id)}/>
     </div>
   );
 }

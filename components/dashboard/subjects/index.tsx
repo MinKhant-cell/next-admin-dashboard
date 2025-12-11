@@ -27,7 +27,7 @@ import {
 import { mutate } from 'swr';
 import { deleteCourse, getCourses } from '@/hooks/useCourses';
 import SubjectsTable from './table/SubjectsTable';
-import { getSubjects } from '@/hooks/useSubject';
+import { deleteSubject, getSubjects } from '@/hooks/useSubject';
 
 export default function SubjectsPage() {
   const router = useRouter();
@@ -40,6 +40,7 @@ export default function SubjectsPage() {
     page: String(pagination.pageIndex + 1),
     limit: String(pagination.pageSize)
   });
+
   const { subjects, isError, isLoading } = getSubjects(
     pagination.pageIndex + 1,
     pagination.pageSize,
@@ -53,11 +54,11 @@ export default function SubjectsPage() {
     return () => clearTimeout(searchHandler);
   }, [debouncedSearch]);
 
-  const handleCoursesDelete = async (id: number) => {
-    const { status, message, error } = await deleteCourse(id);
+  const handleSubjectDelete = async (id: number) => {
+    const { status, message, error } = await deleteSubject(id);
     if (!error && status == 204) {
       if (filter.search) fetchParams.append('search', filter.search);
-      mutate(`/courses?${fetchParams.toString()}`);
+      mutate(`/subjects?${fetchParams.toString()}`);
       toast.success(message);
     } else {
       toast.error(message);
@@ -93,7 +94,7 @@ export default function SubjectsPage() {
               totalCount={subjects.meta?.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
-              onDelete={handleCoursesDelete}
+              onDelete={handleSubjectDelete}
             />
           )}
         </div>

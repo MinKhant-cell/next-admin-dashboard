@@ -20,6 +20,7 @@ import {
   HiOutlineArrowRightOnRectangle
 } from 'react-icons/hi2';
 import { createClient } from '@/utils/supabase/client';
+import { AvatarContainer } from '../ui-components/AvatarContainer';
 
 // const supabase = createClient();
 export default function HeaderLinks(props: { [x: string]: any }) {
@@ -74,12 +75,7 @@ export default function HeaderLinks(props: { [x: string]: any }) {
         <HiOutlineArrowRightOnRectangle className="h-4 w-4 stroke-2 text-zinc-950 dark:text-white" />
       </Button> */}
       <a className="w-full" href="/dashboard/settings">
-        <Avatar className="h-9 min-w-9 md:min-h-10 md:min-w-10">
-          {/* <AvatarImage src={user?.user_metadata.avatar_url} /> */}
-          <AvatarFallback className="font-medium">
-            {user?.name}
-          </AvatarFallback>
-        </Avatar>
+        <AvatarContainer src={'https://github.com/evilrabbit.png'} name={'Admin'}/>
       </a>
     </div>
   );

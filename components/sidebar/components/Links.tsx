@@ -60,7 +60,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
         return (
           <div key={key}>
             <div
-              className={`flex w-full max-w-full items-center justify-between rounded-lg py-3 pl-8 ${
+              className={`flex w-full max-w-full items-center justify-between rounded-lg py-3 ${collapsed ? 'pl-0':'pl-8'} ${
                 activeRoute(route.path.toLowerCase())
                   ? 'bg-zinc-950 font-semibold text-white dark:bg-white dark:text-zinc-950'
                   : 'font-medium text-zinc-950 dark:text-zinc-400'
@@ -74,7 +74,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
                 <div className="w-full items-center justify-center">
                   <div className="flex w-full items-center justify-center">
                     <div
-                      className={`text mr-3 mt-1.5 ${
+                      className={`text ${collapsed ? 'mr-0' : 'mr-3'} mt-1.5 ${
                         activeRoute(route.path.toLowerCase())
                           ? 'font-semibold text-white dark:text-zinc-950'
                           : 'text-zinc-950 dark:text-white'

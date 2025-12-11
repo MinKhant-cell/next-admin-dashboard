@@ -1,17 +1,12 @@
 /*eslint-disable*/
 'use client';
 import { useRouter } from 'next/navigation';
-
-import StudentsTable from '@/components/dashboard/students/table/StudentsTable';
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
-import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { LuCircleFadingPlus } from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
-import TableTabs from './table/TableTabs';
-import { useEffect, useMemo, useState } from 'react';
-import { deleteStudent, getStudents, useStudents } from '@/hooks/useStudents';
+import { useEffect, useState } from 'react';
 import TableSkeletons from './table/TableSkeletons';
 import {
   InputGroup,
@@ -33,7 +28,7 @@ import TeachersTable from './table/TeachersTable';
 import { deletTeacher, getTeachers } from '@/hooks/useTeachers';
 
 
-export default function TeacherPage() {
+export default function TeachersPage() {
   const router = useRouter();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [filter, setFilter] = useState({
@@ -65,7 +60,7 @@ export default function TeacherPage() {
         limit: String(pagination.pageSize)
       });
       if (filter.search) params.append('search', filter.search);
-      mutate(`/employees?${params.toString()}`);
+      mutate(`/teachers?${params.toString()}`);
       toast.success(message);
     } else {
       toast.error(message);
@@ -78,7 +73,6 @@ export default function TeacherPage() {
       title="Subscription Page"
       description="Manage your subscriptions"
     >
-      <Toaster position="top-right" />
       <div className="min-h-screen w-full">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-xl text-gray-700 font-semibold">Teachers List</h1>

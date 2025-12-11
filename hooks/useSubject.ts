@@ -56,12 +56,12 @@ export const creatSubject = async(subject: any) => {
 
 export const updateSubject = async(id: number, subject: any) => {
   const result = await SubjectAPI.update(id,subject);
-  mutate(`/subjects`);
+  mutate(`/subjects/${id}`);
   return result;
 }
 
-export const deletTeacher = async(id: number) => {
-  const result = await TeacherAPI.remove(id);;
+export const deleteSubject = async(id: number) => {
+  const result = await SubjectAPI.remove(id);;
   return result;
 }
 

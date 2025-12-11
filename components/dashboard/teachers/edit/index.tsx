@@ -4,151 +4,218 @@
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { User } from '@supabase/supabase-js';
-import React, { useState, useEffect } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm, FormProvider } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { getStudentById, updateStudent } from '@/hooks/useStudents';
-import dayjs from 'dayjs';
-import { TeacherPersonalForm } from '../components/TeacherPersonalForm';
-import { TeacherProfessionalForm } from '../components/TeacherProfessionalForm';
-import { TeacherProfileForm } from '../components/TeacherProfileForm';
-import { TeacherSettingsForm } from '../components/TeacherSettingsForm';
-import { TeacherReviewForm } from '../components/TeacherReviewForm';
-interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
-  id: string | number;
-}
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Spinner } from '@/components/ui/spinner';
+import { creatSubject } from '@/hooks/useSubject';
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel
+} from '@/components/ui/field';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea
+} from '@/components/ui/input-group';
+import Link from 'next/link';
+import { LuArrowLeft } from 'react-icons/lu';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import {
+  createTeacher,
+  getTeacherById,
+  updateTeacher
+} from '@/hooks/useTeachers';
 
-type StudentType = {
-  name: string;
-  email: string;
-  gender: string;
-  date_of_birth: string;
-};
+const formSchema = z.object({
+  name: z
+    .string()
+    .min(5, 'Name must be at least 5 characters.')
+    .max(32, 'Name must be at most 32 characters.'),
+  description: z
+    .string()
+    .min(10, 'Description must be at least 10 characters.')
+    .max(100, 'Description must be at most 100 characters.')
+    .optional(),
 
-export default function TeacherEditPage(props: Props) {
-  const { user, userDetails, id } = props;
-  const { student, isLoading, isError } = getStudentById(id);
+  email: z.string().email('Invalid email address.'),
+
+  phone: z.string().regex(/^[0-9]{10,15}$/, 'Phone must be 10–15 digits.'),
+
+  image: z.instanceof(File).nullable().optional()
+});
+
+export default function TeacherEditPage({ id }: { id: number | string }) {
+  const { teacher, isLoading, isError } = getTeacherById(id);
   const router = useRouter();
-
-  const methods = useForm<StudentType>();
-  const {
-    handleSubmit,
-    reset,
-    watch,
-    trigger,
-    formState: { errors, isSubmitting }
-  } = methods;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      image: null
+    }
+  });
 
   useEffect(() => {
-    if (student) {
-      reset({
-        name: student.name,
-        email: student.email,
-        gender: student.gender,
-        date_of_birth: dayjs(student.date_of_birth).format("YYYY-MM-DD")
+    if (teacher) {
+      form.reset({
+        name: teacher.name,
+        email: teacher.email,
+        phone: teacher.phone
       });
     }
-  }, [student, reset]);
+  }, [teacher, form.reset]);
 
-  const [step, setStep] = useState(1);
-  const totalSteps = 2;
-  const formData = watch();
+  async function onSubmit(subject: z.infer<typeof formSchema>) {
+    const formData = new FormData();
+    formData.append('name', subject.name);
+    formData.append('email', subject.email);
+    formData.append('phone', subject.phone);
 
-  function getStepFields(step: number): (keyof StudentType)[] {
-    switch (step) {
-      case 1:
-        return ['name', 'email', 'gender', 'date_of_birth'];
-      default:
-        return [];
+    if (subject.image instanceof File) {
+      formData.append('image', subject.image);
+    }
+    const { error, data, status } = await updateTeacher(id, formData);
+    if (!error) {
+      toast.success('Teacher Updated Successfully 🎉');
+      form.reset();
+      // router.push('/dashboard/teachers');
+    } else {
+      toast.error('Teacher Updated Failed 😢');
     }
   }
 
-  const nextStep = async () => {
-    const valid = await trigger(getStepFields(step));
-    if (valid) setStep((prev) => Math.min(prev + 1, totalSteps));
-  };
-
-  const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
-
-  const handleUpdate = async (student: StudentType) => {
-    const { error, data, status, message } = await updateStudent(+id, student);
-    if (!error && !isSubmitting) {
-      toast.success(message);
-      reset();
-      router.push(`/dashboard/students/${id}`);
-    } else {
-      console.log(error);
-      toast.error(message);
-    }
-  };
-
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >
-      <Toaster position="top-right" />
-      <div className="h-full w-full">
-        <div className="h-full w-full rounded-lg ">
+      <div className="h-full w-full flex gap-5">
+        <LinkBackButton href="/dashboard/teachers" />
+        <div className="h-full w-full">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(handleUpdate)}>
-                <div className="mb-7">
-                  <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-                    Edit Course
-                  </h1>
-                  <div className="text-sm font-medium text-gray-600 mb-1">
-                    Step {step} of {totalSteps}
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${(step / totalSteps) * 100}%` }}
-                    />
-                  </div>
-                </div>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={step}
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -50 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {step === 1 && <TeacherPersonalForm errors={errors} />}
-                    {step === 2 && <TeacherProfessionalForm errors={errors} />}
-                    {step === 3 && <TeacherProfileForm errors={errors} />}
-                    {step === 4 && <TeacherSettingsForm errors={errors} />}
-                    {step === 5 && <TeacherReviewForm data={formData} />}
-                  </motion.div>
-                </AnimatePresence>
+            <div className="mb-5">
+              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
+                Update Teacher
+              </h1>
+            </div>
+            {isLoading && <Spinner />}
+            {!isLoading && !isError && (
+              <form
+                id="subject-create-form"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <FieldGroup>
+                  <Controller
+                    name="name"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          className="text-gray-600 dark:text-zinc-200"
+                          htmlFor="name"
+                        >
+                          Name
+                        </FieldLabel>
+                        <Input {...field} id="name" placeholder="Enter Name" />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="email"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          className="text-gray-600 dark:text-zinc-200"
+                          htmlFor="email"
+                        >
+                          Email
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id="email"
+                          placeholder="Enter Email"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="phone"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          className="text-gray-600 dark:text-zinc-200"
+                          htmlFor="phone"
+                        >
+                          Phone
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id="phone"
+                          placeholder="Enter Phone"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
 
-                <div className="flex justify-between pt-4">
-                  {step > 1 && (
-                    <Button type="button" variant="outline" onClick={prevStep}>
-                      Back
-                    </Button>
-                  )}
-                  {step < totalSteps && (
-                    <Button type="button" onClick={nextStep}>
-                      Next
-                    </Button>
-                  )}
-                  {step === totalSteps && (
-                    <Button type="submit" className="bg-green-600 text-white">
-                      Update
-                    </Button>
-                  )}
+                  <Controller
+                    name="image"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel
+                          className="text-gray-600 dark:text-zinc-200"
+                          htmlFor="image"
+                        >
+                          Image Upload
+                        </FieldLabel>
+                        <ImageUploadInput
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </FieldGroup>
+                <div className="my-5">
+                  <Button
+                    type="submit"
+                    form="subject-create-form"
+                    disabled={form.formState.isSubmitting}
+                  >
+                    {form.formState.isSubmitting && <Spinner />}
+                    Update
+                  </Button>
                 </div>
               </form>
-            </FormProvider>
+            )}
           </Card>
         </div>
       </div>

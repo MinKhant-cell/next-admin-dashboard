@@ -16,6 +16,9 @@ export const SubjectAPI = {
     apiClient(`/subjects/${id}`, {
       method: "PATCH",
       body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      }
     }),
 
   remove: (id: number) =>

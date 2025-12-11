@@ -10,7 +10,7 @@ import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ImageUploadInput } from '@/components/uploads/ImageUploadInput';
+import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Spinner } from "@/components/ui/spinner"
@@ -28,6 +28,9 @@ import {
   InputGroupText,
   InputGroupTextarea
 } from '@/components/ui/input-group';
+import Link from 'next/link';
+import { LuArrowLeft } from 'react-icons/lu';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
 
 const formSchema = z.object({
   name: z
@@ -79,8 +82,9 @@ export default function SubjectsCreatePage() {
       title="Subscription Page"
       description="Manage your subscriptions"
     >
-      <div className="h-full w-full">
-        <div className="h-full w-full rounded-lg ">
+      <div className="h-full w-full flex gap-5">
+        <LinkBackButton href="/dashboard/subjects" />
+        <div className="h-full w-full">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
           <div className="mb-5">
 <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">

@@ -1,27 +1,18 @@
 /*eslint-disable*/
 'use client';
-import { useRouter } from 'next/navigation';
 
-import CoursesTable from '@/components/dashboard/courses/table/CoursesTable';
 import DashboardLayout from '@/components/layout';
-import { Button } from '@/components/ui/button';
-import { User } from '@supabase/supabase-js';
-import Link from 'next/link';
-import { LuChevronsLeft, LuArrowLeft, LuCircleFadingPlus } from 'react-icons/lu';
-import { toast, Toaster } from 'sonner';
 import { Card } from '@/components/ui/card';
 import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
-import { getStudentById } from '@/hooks/useStudents';
 import { getTeacherById } from '@/hooks/useTeachers';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
 interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
   id: string | number;
 }
 
 export default function TeacherDetailsPage(props: Props) {
-  const { user, userDetails, id } = props;
+  const { id } = props;
 
   const { teacher, isLoading, isError } = getTeacherById(id);
 
@@ -63,20 +54,11 @@ export default function TeacherDetailsPage(props: Props) {
   );
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >
-      <Toaster position="top-right" />
       <div className="flex gap-5">
-        <div>
-          <Link href={'/dashboard/teachers'}>
-            <Button className="hover:dark:bg-gray-800 hover:dark:text-white" variant="outline" size="sm">
-              <LuArrowLeft/> 
-            </Button>
-          </Link>
-        </div>
+        <LinkBackButton href={'/dashboard/teachers'} />
         <Card className={'h-full py-3 w-full sm:overflow-auto'}>
           <div className="px-5">
             <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
@@ -93,9 +75,9 @@ export default function TeacherDetailsPage(props: Props) {
                 {renderRow('Name', teacher.name)}
                 {renderRow('Email', teacher.email)}
                 {renderRow('Phone', teacher.phone)}
-                {renderRow('Gender', teacher.gender)}
-                {renderRow('Country', teacher.country)}
-                {renderRow('Status', teacher.status)}
+                {/* {renderRow('Gender', teacher.gender)} */}
+                {/* {renderRow('Country', teacher.country)} */}
+                {/* {renderRow('Status', teacher.status)} */}
                 {renderRow('Created At', teacher.createdAt)}
               </div>
             )}

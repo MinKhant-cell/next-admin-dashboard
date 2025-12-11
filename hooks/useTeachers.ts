@@ -16,7 +16,7 @@ export const getTeachers = (page = 1, limit = 10, filter) => {
   if (filter.search) params.append('search', filter.search);
   const queryString = params.toString();
   const { data, error, isLoading } = useSWR(
-     `/employees?${queryString}`,
+     `/teachers?${queryString}`,
     fetcher
   );
 
@@ -41,7 +41,7 @@ export const getAllTeachers = () => {
 
 export const getTeacherById = (id: string | number) => {
   const { data, error, isLoading } = useSWR(
-    `/employees/${id}`,
+    `/teachers/${id}`,
     fetcher
   );
   return {
@@ -51,19 +51,19 @@ export const getTeacherById = (id: string | number) => {
   };
 }
 
-export const creatTeacher = async(student: any) => {
-  const result = await TeacherAPI.create(student);
-  mutate(`/employees`);
+export const createTeacher = async(teacher: any) => {
+  const result = await TeacherAPI.create(teacher);
+  mutate(`/teachers`);
   return result;
 }
 
-export const updateTeacher = async(id: number, student: any) => {
+export const updateTeacher = async(id: string | number, student: any) => {
   const result = await TeacherAPI.update(id,student);
-  mutate(`/employees`);
+  mutate(`/teachers/${id}`);
   return result;
 }
 
-export const deletTeacher = async(id: number) => {
+export const deletTeacher = async(id: string | number) => {
   const result = await TeacherAPI.remove(id);;
   return result;
 }

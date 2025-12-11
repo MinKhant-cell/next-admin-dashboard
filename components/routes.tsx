@@ -17,6 +17,8 @@ import {
   HiOutlineCalendar
 } from 'react-icons/hi2';
 
+import { UsersRound } from 'lucide-react';
+
 export const routes: IRoute[] = [
   {
     name: 'Dashboard',
@@ -42,25 +44,25 @@ export const routes: IRoute[] = [
     icon: <HiOutlineBookOpen className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
-   {
-    name: 'Students List',
-    path: '/dashboard/students',
-    icon: <HiOutlineUserPlus className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
-    collapse: false
-  },
+  //  {
+  //   name: 'Students List',
+  //   path: '/dashboard/students',
+  //   icon: <HiOutlineUserPlus className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+  //   collapse: false
+  // },
    {
     name: 'Teachers List',
     path: '/dashboard/teachers',
-    icon: <HiOutlineUsers className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    icon: <UsersRound className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
   
-  {
-    name: 'Calendar',
-    path: '/dashboard/calendar',
-    icon: <HiOutlineCalendar className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
-    collapse: false
-  },
+  // {
+  //   name: 'Calendar',
+  //   path: '/dashboard/calendar',
+  //   icon: <HiOutlineCalendar className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+  //   collapse: false
+  // },
   // {
   //   name: 'Users List',
   //   path: '/dashboard/users-list',
@@ -77,12 +79,12 @@ export const routes: IRoute[] = [
   //   ),
   //   collapse: false,
   // },
-  {
-    name: 'Profile Settings',
-    path: '/dashboard/settings',
-    icon: (
-      <HiOutlineCog8Tooth className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />
-    ),
-    collapse: false
-  },
+  // {
+  //   name: 'Profile Settings',
+  //   path: '/dashboard/settings',
+  //   icon: (
+  //     <HiOutlineCog8Tooth className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />
+  //   ),
+  //   collapse: false
+  // },
 ];

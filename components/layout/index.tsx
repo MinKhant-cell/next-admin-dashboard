@@ -4,7 +4,6 @@ import { routes } from '@/components/routes';
 import Sidebar from '@/components/sidebar/Sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import { getActiveRoute } from '@/utils/navigation';
-import { User } from '@supabase/supabase-js';
 import { usePathname } from 'next/navigation';
 import {
   OpenContext,
@@ -56,15 +55,13 @@ useEffect(() => {
       <UserDetailsContext.Provider value={user}>
         <OpenContext.Provider value={{ open, setOpen }}>
           <div className="dark:bg-background-900 flex h-full w-full bg-white">
-            <Toaster />
+            <Toaster position="top-right"/>
             <Sidebar ref={sidebarRef} routes={routes} setOpen={setOpen} collapsed={collapsed} setCollapsed={setCollapsed}/>
             <div className="h-full w-full dark:bg-zinc-950">
               <main
-                className={`flex-none w-full transition-all dark:bg-zinc-950`}
+                className={`flex-none w-full transition-all dark:bg-zinc-950 px-5`}
               >
                   <Navbar collapsed={collapsed} brandText={getActiveRoute(routes, pathname)} />
-
-
                 <div className="mx-auto min-h-screen p-2 !pt-[90px] md:p-2 md:!pt-[118px]">
                   {props.children}
                 </div>

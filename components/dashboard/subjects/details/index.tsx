@@ -22,6 +22,7 @@ import { getCourseById } from '@/hooks/useCourses';
 import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
 import { AssignStudentDialogForm } from '../components/AsignStudentDialogForm';
 import { getSubjectById } from '@/hooks/useSubject';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
 interface Props {
   id: string | number;
 }
@@ -73,17 +74,8 @@ export default function SubjectDetailsPage(props: Props) {
     >
       <Toaster position="top-right" />
       <div className="flex gap-5">
-        <div>
-          <Link href={'/dashboard/subjects'}>
-            <Button
-              className="hover:dark:bg-gray-800 hover:dark:text-white"
-              variant="outline"
-              size="sm"
-            >
-              <LuArrowLeft />
-            </Button>
-          </Link>
-        </div>
+        <LinkBackButton href="/dashboard/subjects" />
+        
         <div className="w-full">
           <Card className={'py-3 w-full sm:overflow-auto mb-5'}>
             <div className="px-5">
@@ -98,9 +90,14 @@ export default function SubjectDetailsPage(props: Props) {
                 <p>Loading ...</p>
               ) : (
                 <div>
-                  <p className="text-green-500">
+                  {/* <p className="text-green-500">
                   {JSON.stringify(subject)}
-                </p>
+                </p> */}
+                  {renderRow('Name', subject.name)}
+                  {renderRow('Description', subject.description)}
+                  {renderRow('Image', subject.image_url)}
+                  {renderRow('Created At', subject.created_at)}
+
                   {/* {renderRow('Name', course.name)}
                   {renderRow('Start Date', course.start_date)}
                   {renderRow('End Date', course.end_date)}
