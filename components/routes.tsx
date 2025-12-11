@@ -17,7 +17,7 @@ import {
   HiOutlineCalendar
 } from 'react-icons/hi2';
 
-import { UsersRound, Notebook, BookOpenText, Blocks } from 'lucide-react';
+import { UsersRound, Notebook, BookOpenText, Blocks, Calendar } from 'lucide-react';
 
 export const routes: IRoute[] = [
   {
@@ -54,6 +54,12 @@ export const routes: IRoute[] = [
     name: 'Teachers List',
     path: '/dashboard/teachers',
     icon: <UsersRound className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    collapse: false
+  },
+  {
+    name: 'Timetables List',
+    path: '/dashboard/timetables',
+    icon: <Calendar className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
   

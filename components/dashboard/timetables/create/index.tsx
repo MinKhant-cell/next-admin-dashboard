@@ -28,6 +28,8 @@ import {
   InputGroupText,
   InputGroupTextarea
 } from '@/components/ui/input-group';
+import Link from 'next/link';
+import { LuArrowLeft } from 'react-icons/lu';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
 
 const formSchema = z.object({
@@ -46,7 +48,7 @@ const formSchema = z.object({
     .optional()
 })
 
-export default function CourseCreatePage() {
+export default function SubjectsCreatePage() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,12 +83,12 @@ export default function CourseCreatePage() {
       description="Manage your subscriptions"
     >
       <div className="h-full w-full flex gap-5">
-        <LinkBackButton href="/dashboard/courses" />
+        <LinkBackButton href="/dashboard/subjects" />
         <div className="h-full w-full">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
           <div className="mb-5">
 <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-            Create Course
+            Create Subject
           </h1>
           </div>
           

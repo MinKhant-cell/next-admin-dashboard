@@ -148,8 +148,8 @@ export default function TeachersPage() {
             <TableSkeletons />
           ) : (
             <TeachersTable
-              data={teachers.data}
-              totalCount={teachers.meta.total || 0}
+              data={teachers.data || []}
+              totalCount={teachers.meta?.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
               onDelete={handleTeacherDelete}

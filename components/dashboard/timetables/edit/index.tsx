@@ -4,50 +4,43 @@
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import React, { useState } from 'react';
-import { Controller, useForm, FormProvider } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { Spinner } from "@/components/ui/spinner"
-import { creatSubject } from '@/hooks/useSubject';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Spinner } from '@/components/ui/spinner';
+import { getSubjectById, updateSubject } from '@/hooks/useSubject';
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel
 } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea
-} from '@/components/ui/input-group';
+import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
 
 const formSchema = z.object({
   name: z
     .string()
-    .min(5, "Name must be at least 5 characters.")
-    .max(32, "Name must be at most 32 characters."),
+    .min(5, 'Name must be at least 5 characters.')
+    .max(32, 'Name must be at most 32 characters.'),
   description: z
     .string()
-    .min(10, "Description must be at least 10 characters.")
-    .max(100, "Description must be at most 100 characters.")
+    .min(10, 'Description must be at least 10 characters.')
+    .max(100, 'Description must be at most 100 characters.')
     .optional(),
-  image: z
-    .instanceof(File)
-    .nullable()
-    .optional()
-})
+  image: z.instanceof(File).nullable().optional()
+});
 
-export default function CourseCreatePage() {
+export default function SubjectEditPage({ id }: any) {
+  const { subject, isError, isLoading } = getSubjectById(id);
+
   const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,22 +50,24 @@ export default function CourseCreatePage() {
     }
   });
 
-  async function onSubmit(subject: z.infer<typeof formSchema>) {
-      const formData = new FormData();
-      formData.append("name", subject.name);
-      formData.append("description", subject.description);
+  useEffect(() => {
+    if (subject) {
+      form.reset({
+        name: subject.name,
+        description: subject.description
+      });
+    }
+  }, [subject, form.reset]);
 
-      if (subject.image instanceof File) {
-        formData.append("image", subject.image);
-      }
-    const {error, data, status} = await creatSubject(formData);
-        if(!error){
-          toast.success("Subject Created Successfully 🎉");
-          form.reset();
-          router.push('/dashboard/subjects')
-        }else {
-          toast.error("Something went wrong 😢");
-        }
+  async function onSubmit(subject: z.infer<typeof formSchema>) {
+    const { error, data, status } = await updateSubject(id, subject);
+    if (!error) {
+      toast.success('Subject Updated Successfully 🎉');
+      form.reset();
+      router.push('/dashboard/subjects');
+    } else {
+      toast.error('Something went wrong 😢');
+    }
   }
 
   return (
@@ -81,16 +76,23 @@ export default function CourseCreatePage() {
       description="Manage your subscriptions"
     >
       <div className="h-full w-full flex gap-5">
-        <LinkBackButton href="/dashboard/courses" />
-        <div className="h-full w-full">
+        <LinkBackButton href="/dashboard/subjects" />
+
+        <div className="h-full w-full rounded-lg ">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
-          <div className="mb-5">
-<h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-            Create Course
-          </h1>
-          </div>
-          
-            <form id="subject-create-form" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="mb-5">
+              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
+                Edit Subject
+              </h1>
+            </div>
+
+            {isLoading && <Spinner />}
+
+            {!isLoading && !isError && (
+                 <form
+              id="subject-create-form"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
               <FieldGroup>
                 <Controller
                   name="name"
@@ -103,12 +105,7 @@ export default function CourseCreatePage() {
                       >
                         Name
                       </FieldLabel>
-                      <Input
-                        {...field}
-                        id="name"
-                        placeholder="Enter Name"
-
-                      />
+                      <Input {...field} id="name" placeholder="Enter Name" />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -153,7 +150,10 @@ export default function CourseCreatePage() {
                       >
                         Image Upload
                       </FieldLabel>
-                      <ImageUploadInput value={field.value} onChange={field.onChange} />
+                      <ImageUploadInput
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
 
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -164,15 +164,18 @@ export default function CourseCreatePage() {
               </FieldGroup>
               <div className="my-5">
                 <Button
-  type="submit"
-  form="subject-create-form"
-  disabled={form.formState.isSubmitting}
->
-  {form.formState.isSubmitting && <Spinner />}
-  Create
-</Button>
+                  type="submit"
+                  form="subject-create-form"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting && <Spinner />}
+                  Update
+                </Button>
               </div>
             </form>
+            )}
+
+        
           </Card>
         </div>
       </div>
