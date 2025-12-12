@@ -1,11 +1,7 @@
 /*eslint-disable*/
 'use client';
 
-import MainChart from '@/components/dashboard/main/cards/MainChart';
-import MainDashboardTable from '@/components/dashboard/main/cards/MainDashboardTable';
 import DashboardLayout from '@/components/layout';
-import tableDataUserReports from '@/variables/tableDataUserReports';
-import { User } from '@supabase/supabase-js';
 import TeacherStautsOverviewChart from './cards/TeacherStautsOverviewChart';
 import DashboardWidget from './cards/DashboardWidget';
 import FeeCollectionChart from './cards/FeeCollectionChart';

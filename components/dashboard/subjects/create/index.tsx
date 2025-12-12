@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 import { Controller, useForm, FormProvider } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -28,8 +27,6 @@ import {
   InputGroupText,
   InputGroupTextarea
 } from '@/components/ui/input-group';
-import Link from 'next/link';
-import { LuArrowLeft } from 'react-icons/lu';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
 
 const formSchema = z.object({

@@ -14,7 +14,6 @@ import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Spinner } from "@/components/ui/spinner"
-import { creatSubject } from '@/hooks/useSubject';
 import {
   Field,
   FieldDescription,
@@ -22,14 +21,7 @@ import {
   FieldGroup,
   FieldLabel
 } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea
-} from '@/components/ui/input-group';
-import Link from 'next/link';
-import { LuArrowLeft } from 'react-icons/lu';
+
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
 import { createTeacher } from '@/hooks/useTeachers';
 

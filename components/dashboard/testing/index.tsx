@@ -78,12 +78,12 @@ export default function TeacherPage() {
           <h1 className="text-xl text-gray-700 font-semibold">Testing</h1>
         </div>
         <div className="rounded-lg border p-4 shadow-sm">
-      <FullCalendar
+      {/* <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}
         initialView="dayGridMonth"
         events={eventsList}
         height="auto"
-      />
+      /> */}
     </div>
         
       </div>

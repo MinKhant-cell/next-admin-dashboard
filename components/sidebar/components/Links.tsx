@@ -2,12 +2,11 @@
 
 /* eslint-disable */
 import NavLink from '@/components/link/NavLink';
-import { IRoute } from '@/types/types';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useCallback } from 'react';
 
 interface SidebarLinksProps extends PropsWithChildren {
-  routes: IRoute[];
+  routes: any;
   [x: string]: any;
   collapsed?: boolean;
 }
@@ -32,7 +31,7 @@ export function SidebarLinks(props: SidebarLinksProps) {
   );
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
-  const createLinks = (routes: IRoute[]) => {
+  const createLinks = (routes: any) => {
     return routes.map((route, key) => {
       if (route.disabled) {
         return (

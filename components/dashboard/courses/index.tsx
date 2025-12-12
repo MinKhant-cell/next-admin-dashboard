@@ -9,10 +9,7 @@ import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { LuCircleFadingPlus } from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
-import { DeleteCourse } from './hooks/useCourses';
-import TableTabs from './table/TableTabs';
 import { useEffect, useMemo, useState } from 'react';
-import { deleteStudent, getStudents, useStudents } from '@/hooks/useStudents';
 import TableSkeletons from './table/TableSkeletons';
 import {
   InputGroup,

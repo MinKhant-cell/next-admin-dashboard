@@ -1,5 +1,4 @@
 // Auth Imports
-import { IRoute } from '@/types/types';
 import {
   HiOutlineHome,
   HiOutlineCpuChip,
@@ -19,7 +18,7 @@ import {
 
 import { UsersRound, Notebook, BookOpenText, Blocks, Calendar } from 'lucide-react';
 
-export const routes: IRoute[] = [
+export const routes: any = [
   {
     name: 'Dashboard',
     path: '/dashboard/main',

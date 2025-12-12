@@ -31,7 +31,6 @@ import React, { useEffect, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
-import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
 
 const statusColors: Record<string, string> = {
   upcoming:

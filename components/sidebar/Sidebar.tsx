@@ -1,6 +1,5 @@
 'use client';
 
-import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import {
   renderThumb,
@@ -8,24 +7,18 @@ import {
   renderView
 } from '@/components/scrollbar/Scrollbar';
 import Links from '@/components/sidebar/components/Links';
-import SidebarCard from '@/components/sidebar/components/SidebarCard';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
-import { IRoute } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import React, { PropsWithChildren, useContext, useState, forwardRef } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 import { HiX } from 'react-icons/hi';
 import { HiMiniBuildingLibrary } from 'react-icons/hi2';
 import { HiOutlineArrowRightOnRectangle } from 'react-icons/hi2';
-import { getRedirectMethod } from '@/utils/auth-helpers/settings';
-import { UserContext, UserDetailsContext } from '@/contexts/layout';
-import { createClient } from '@/utils/supabase/client';
 
 // const supabase = createClient();
 
 export interface SidebarProps extends PropsWithChildren {
-  routes: IRoute[];
+  routes: any;
   [x: string]: any;
 }
 
@@ -35,17 +28,11 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(function Sidebar(
 )
 {
 
-  const router = getRedirectMethod() === 'client' ? useRouter() : null;
+  const router = useRouter();
   const { routes, collapsed, setCollapsed } = props;
 
 
-  const user = useContext(UserContext);
-  const userDetails = useContext(UserDetailsContext);
-  const handleSignOut = async (e) => {
-    e.preventDefault();
-    // supabase.auth.signOut();
-    router.push('/dashboard/signin');
-  };
+  
   // SIDEBAR
   return (
     <div

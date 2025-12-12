@@ -1,28 +1,14 @@
 /*eslint-disable*/
 'use client';
-import { useRouter } from 'next/navigation';
 
-import CoursesTable from '@/components/dashboard/courses/table/CoursesTable';
 import DashboardLayout from '@/components/layout';
-import { Button } from '@/components/ui/button';
-import { User } from '@supabase/supabase-js';
-import Link from 'next/link';
-import {
-  LuChevronsLeft,
-  LuArrowLeft,
-  LuCircleFadingPlus
-} from 'react-icons/lu';
+
 import { toast, Toaster } from 'sonner';
-import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
-import { getStudentById } from '@/hooks/useStudents';
-import { getCourseById } from '@/hooks/useCourses';
-import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
-import { AssignStudentDialogForm } from '../components/AsignStudentDialogForm';
 import { getSubjectById } from '@/hooks/useSubject';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import { Separator } from '@/components/ui/separator';
 interface Props {
   id: string | number;
 }

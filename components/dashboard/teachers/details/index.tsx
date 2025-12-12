@@ -3,10 +3,10 @@
 
 import DashboardLayout from '@/components/layout';
 import { Card } from '@/components/ui/card';
-import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
 import { getTeacherById } from '@/hooks/useTeachers';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import { Separator } from '@/components/ui/separator';
 interface Props {
   id: string | number;
 }

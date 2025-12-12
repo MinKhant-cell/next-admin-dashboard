@@ -1,27 +1,21 @@
 /*eslint-disable*/
 'use client';
-import { useRouter } from 'next/navigation';
 
-import CoursesTable from '@/components/dashboard/courses/table/CoursesTable';
 import DashboardLayout from '@/components/layout';
-import { Button } from '@/components/ui/button';
 import { User } from '@supabase/supabase-js';
-import Link from 'next/link';
-import { LuChevronsLeft, LuArrowLeft, LuCircleFadingPlus } from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
-import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
 import { getStudentById } from '@/hooks/useStudents';
+import { Separator } from '@/components/ui/separator';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
 interface Props {
-  user: User | null | undefined;
-  userDetails: { [x: string]: any } | null | any;
+  
   id: string | number;
 }
 
 export default function StudentDetailsPage(props: Props) {
-  const { user, userDetails, id } = props;
+  const { id } = props;
 
   const { student, isLoading, isError } = getStudentById(id);
 
@@ -63,20 +57,12 @@ export default function StudentDetailsPage(props: Props) {
   );
   return (
     <DashboardLayout
-      user={user}
-      userDetails={userDetails}
       title="Subscription Page"
       description="Manage your subscriptions"
     >
       <Toaster position="top-right" />
       <div className="flex gap-5">
-        <div>
-          <Link href={'/dashboard/students'}>
-            <Button className="hover:dark:bg-gray-800 hover:dark:text-white" variant="outline" size="sm">
-              <LuArrowLeft/> 
-            </Button>
-          </Link>
-        </div>
+        <LinkBackButton href="/dashboard/students" />
         <Card className={'h-full py-3 w-full sm:overflow-auto'}>
           <div className="px-5">
             <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
