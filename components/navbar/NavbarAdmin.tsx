@@ -7,17 +7,18 @@ export default function AdminNavbar(props: {
   brandText: string;
   [x: string]: any;
   collapsed?: boolean;
+  sidebarWidth: any;
 }) {
-  const { brandText, collapsed } = props;
+  const { sidebarWidth, brandText, collapsed } = props;
 
   return (
     <nav
-      className={`${collapsed ? 'w-[calc(100vw-80px)]' : 'w-[calc(100vw-300px)]'} fixed border-none right-0 top-0 z-[0] flex flex-row items-center justify-between rounded-none bg-white py-2 transition-all dark:bg-transparent md:p-2 `}
+      className={`w-full fixed border right-0 top-0 z-1 flex flex-row items-center justify-between rounded-none bg-white  py-2 transition-all dark:bg-transparent md:p-2 `}
     >
       <div className="">
         <div className="h-6 md:mb-2 text-xs md:pt-1">
           <div>
-          <NavbarBreadcrumb items={[]}/>
+          <NavbarBreadcrumb items={[{name: 'Dashboard', href: '/'}]}/>
           </div>
 
           {/* <a

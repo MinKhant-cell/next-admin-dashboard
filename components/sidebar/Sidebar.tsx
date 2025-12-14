@@ -37,8 +37,8 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(function Sidebar(
   return (
     <div
     ref={ref}
-      className={`lg:!z-99 !z-[99] min-h-full transition-all md:!z-[99] xl:!z-0 
-    ${props.variant === 'auth' ? 'xl:hidden' : 'xl:block'}
+      className={`z-2 min-h-full transition-all md:!z-[99] z-2
+   
     ${props.open ? '' : '-translate-x-[120%] xl:translate-x-[unset]'}
     ${collapsed ? 'w-[80px]' : 'w-[300px]'}
   `}

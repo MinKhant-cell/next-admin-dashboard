@@ -7,7 +7,7 @@ import {
 export function AvatarContainer({src,name}: {src,name: string}) {
   return (
     <div className="">
-      <Avatar>
+      <Avatar className="w-8 h-8">
         <AvatarImage src={src} alt={name} />
         <AvatarFallback>{name}</AvatarFallback>
       </Avatar>

@@ -32,7 +32,7 @@ export default function DynamicBreadcrumb({ items }: DynamicBreadcrumbProps) {
               {index > 0 && <BreadcrumbSeparator />}
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage className="text-xs">
+                  <BreadcrumbPage className="text-xs text-gray-500">
                     {item.name}
                   </BreadcrumbPage>
                 ) : (
