@@ -62,6 +62,7 @@ const DashboardLayout: React.FC<Props> = (props: Props) => {
         <SiteHeader />
         <div className="h-full w-full dark:bg-zinc-950">
           <main className="p-5">
+            <Toaster position="top-right" />
             {props.children}
           </main>
         </div>
