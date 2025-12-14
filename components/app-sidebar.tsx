@@ -1,5 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
-
+"use client";
 import {
   Sidebar,
   SidebarContent,
@@ -13,10 +12,20 @@ import {
 } from "@/components/ui/sidebar"
 import { routes } from '@/components/routes';
 import Link from "next/link";
+import { useCallback } from "react";
+import { usePathname } from 'next/navigation';
+import { Sprout } from 'lucide-react'
 
 export function AppSidebar() {
+    const pathname = usePathname();
+    const activeRoute = useCallback(
+    (routeName: string) => {
+        return pathname?.includes(routeName);
+    },
+    [pathname]
+    );
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
         <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -25,9 +34,9 @@ export function AppSidebar() {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
                 <Link href="/">
+                <Sprout className="mr-2 h-4 w-4" />
                 <span className="text-base font-semibold">{process.env.NEXT_PUBLIC_APP_NAME || 'Dashboard'}</span>
                 </Link>
-              
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -38,11 +47,13 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {routes.map((route) => (
-                <SidebarMenuItem key={route.name}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem className="items-center" key={route.name}>
+                  <SidebarMenuButton asChild className={`${activeRoute(route.path) ? 'bg-[#f4f4f5]' : ''}`}>
                     <Link href={route.path}>
-                    {route.icon}
-                      <span>{route.name}</span>
+                    <div className={`text mr-1 mt-1.5`}>
+                      {route.icon}
+                    </div>
+                    <p className={`mr-auto text-sm`}>{route.name}</p>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
