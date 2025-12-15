@@ -1,16 +1,9 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+
 import { OpenContext, UserContext } from '@/contexts/layout';
-import { getRedirectMethod } from '@/utils/auth-helpers/settings';
 import { useTheme } from 'next-themes';
-import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react';
 import { FiAlignJustify } from 'react-icons/fi';
 import {
@@ -19,8 +12,8 @@ import {
   HiOutlineInformationCircle,
   HiOutlineArrowRightOnRectangle
 } from 'react-icons/hi2';
-import { createClient } from '@/utils/supabase/client';
 import { AvatarContainer } from '../ui-components/AvatarContainer';
+import Link from 'next/link';
 
 // const supabase = createClient();
 export default function HeaderLinks(props: { [x: string]: any }) {
@@ -28,7 +21,6 @@ export default function HeaderLinks(props: { [x: string]: any }) {
   const user = useContext(UserContext);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const router = getRedirectMethod() === 'client' ? useRouter() : null;
 
   const onOpen = () => {
     setOpen(false);
@@ -42,7 +34,6 @@ export default function HeaderLinks(props: { [x: string]: any }) {
   const handleSignOut = async (e) => {
     e.preventDefault();
     // supabase.auth.signOut();
-    router.push('/dashboard/signin');
   };
   if (!mounted) return null;
   return (
@@ -74,9 +65,10 @@ export default function HeaderLinks(props: { [x: string]: any }) {
       >
         <HiOutlineArrowRightOnRectangle className="h-4 w-4 stroke-2 text-zinc-950 dark:text-white" />
       </Button> */}
-      <a className="w-full" href="/dashboard/settings">
+      <Link href={'/dashboard/settings'}>
         <AvatarContainer src={'https://github.com/evilrabbit.png'} name={'Admin'}/>
-      </a>
+       </Link>
+     
     </div>
   );
 }

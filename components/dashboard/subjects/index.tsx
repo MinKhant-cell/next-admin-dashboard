@@ -15,17 +15,7 @@ import {
   InputGroupInput
 } from '@/components/ui/input-group';
 import { Search } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
 import { mutate } from 'swr';
-import { deleteCourse, getCourses } from '@/hooks/useCourses';
 import SubjectsTable from './table/SubjectsTable';
 import { deleteSubject, getSubjects } from '@/hooks/useSubject';
 

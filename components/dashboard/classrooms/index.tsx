@@ -2,34 +2,25 @@
 'use client';
 import { useRouter } from 'next/navigation';
 
+import ClassroomTable from '@/components/dashboard/classrooms/table/ClassroomsTable';
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { LuCircleFadingPlus } from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableSkeletons from './table/TableSkeletons';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput
 } from '@/components/ui/input-group';
-import { Search } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select';
+import { Search, Filter, FolderDown } from 'lucide-react';
 import { mutate } from 'swr';
-import { deleteCourse, getCourses } from '@/hooks/useCourses';
-import ClassroomTable from './table/ClassroomsTable';
+import { deleteCourse } from '@/hooks/useCourses';
+import { getClassrooms } from '@/hooks/useClassrooms';
 
 export default function ClassroomsPage() {
-  const router = useRouter();
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
   const [filter, setFilter] = useState({
     search: ''
@@ -39,7 +30,7 @@ export default function ClassroomsPage() {
     page: String(pagination.pageIndex + 1),
     limit: String(pagination.pageSize)
   });
-  const { courses, isError, isLoading } = getCourses(
+  const { classrooms, isError, isLoading } = getClassrooms(
     pagination.pageIndex + 1,
     pagination.pageSize,
     filter
@@ -78,7 +69,7 @@ export default function ClassroomsPage() {
               variant="outline"
               size="sm"
             >
-              <LuCircleFadingPlus className="mr-1" /> Add Classroom
+              <LuCircleFadingPlus className="mr-1" /> Add Classrooms
             </Button>
           </Link>
         </div>
@@ -97,46 +88,13 @@ export default function ClassroomsPage() {
           </div>
 
           <div className="flex gap-3 items-center">
-            <div>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem className="text-gray-800" value="ACTIVE">
-                      ACTIVE
-                    </SelectItem>
-                    <SelectItem className="text-gray-800" value="INACTIVE">
-                      INACTIVE
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+            <Button variant="outline" size="icon">
+              <Filter />
+            </Button>
+            <Button variant="outline" size="icon">
+              <FolderDown />
+            </Button>
 
-            {/* <div>
-              <Select
-                value={filter.gender}
-                onValueChange={(value) =>
-                  setFilter((prev) => ({ ...prev, gender: value }))
-                }
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem className="text-gray-800" value="MALE">
-                      MALE
-                    </SelectItem>
-                    <SelectItem className="text-gray-800" value="FEMALE">
-                      FEMALE
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div> */}
           </div>
         </div>
         <div className="w-full rounded-lg ">
@@ -144,8 +102,8 @@ export default function ClassroomsPage() {
             <TableSkeletons />
           ) : (
             <ClassroomTable
-              data={courses.data || []}
-              totalCount={courses.meta?.total || 0}
+              data={classrooms.data || []}
+              totalCount={classrooms.meta?.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
               onDelete={handleCoursesDelete}

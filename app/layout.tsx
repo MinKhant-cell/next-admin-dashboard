@@ -1,9 +1,6 @@
-import SupabaseProvider from './supabase-provider';
 import { PropsWithChildren } from 'react';
 import '@/styles/globals.css';
 import { ThemeProvider } from './theme-provider';
-
-export const dynamic = 'force-dynamic';
 
 export default function RootLayout({
   // Layouts must accept a children prop.

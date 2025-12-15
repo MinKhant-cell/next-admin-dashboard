@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { ImagePlus, Trash2 } from 'lucide-react';
-
+import Image from "next/image";
 import {
   Empty,
   EmptyHeader,
@@ -72,9 +72,11 @@ export function ImageUploadInput({ value, onChange }) {
         </Empty>
       ) : (
         <div className="relative border rounded-lg p-2 flex gap-4 items-center">
-          <img
+          <Image
             src={previewUrl}
             alt="preview"
+            width={128}
+  height={128}
             className="w-24 h-24 rounded-md object-cover border"
           />
           <div className="flex flex-col text-sm">

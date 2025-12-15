@@ -31,7 +31,9 @@ import React, { useEffect, useState } from 'react';
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
-import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
+import DateContainer from '@/components/ui-components/DateContainer';
+import TimeContainer from '@/components/ui-components/TimeContainer';
+import { AvatarContainer } from '@/components/ui-components/AvatarContainer';
 
 const statusColors: Record<string, string> = {
   upcoming:
@@ -61,8 +63,8 @@ type RowObj = {
   status: string;
   created_at: string;
   menu?: string;
-  employee_id?: number;
-  employee?: any;
+  teacher?: any;
+  subjects?: any;
 };
 
 function StudentTable(props) {
@@ -70,20 +72,53 @@ function StudentTable(props) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [selectedRowIds, setSelectedRowIds] = useState({});
+  const allSelected =
+    data.length > 0 && data.every((row) => selectedRowIds[row.id]);
+
+  // Handle Select All
+  const handleSelectAll = () => {
+    if (allSelected) {
+      // Uncheck all
+      setSelectedRowIds({});
+    } else {
+      // Check all
+      const newState = {};
+      data.map((row) => {
+        newState[row.id] = true;
+      });
+      setSelectedRowIds(newState);
+    }
+  };
+
+  // Handle Single Row Select
+
+  const handleSelectRow = (id: string | number) => {
+    setSelectedRowIds((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   const columns = [
     columnHelper.accessor('checked', {
       id: 'checked',
       header: () => (
         <div className="flex max-w-max items-center">
-          <Checkbox />
+          <Checkbox checked={allSelected} onCheckedChange={handleSelectAll} />
         </div>
       ),
-      cell: (info: any) => (
-        <div className="flex max-w-max items-center">
-          <Checkbox defaultChecked={info.getValue()} />
-        </div>
-      )
+      cell: (info: any) => {
+        const rowId = info.row.original.id;
+        return (
+          <div className="flex max-w-max items-center">
+            <Checkbox
+              checked={!!selectedRowIds[rowId]}
+              onCheckedChange={() => handleSelectRow(rowId)}
+            />
+          </div>
+        );
+      }
     }),
     columnHelper.accessor('id', {
       id: 'id',
@@ -113,8 +148,8 @@ function StudentTable(props) {
         </Link>
       )
     }),
-    columnHelper.accessor('employee_id', {
-      id: 'employee_id',
+    columnHelper.accessor('teacher', {
+      id: 'teacher',
       header: () => (
         <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Teacher
@@ -123,10 +158,14 @@ function StudentTable(props) {
       cell: (info) => {
         const row = info.row.original;
         return (
-          <div className="flex justify-start w-full items-center gap-[14px]">
-            <p className="text-xs font-medium text-zinc-950 dark:text-white">
-                {row.employee?.name}
-              </p>
+          <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
+            {row.subjects?.map((subject) => (
+              <AvatarContainer
+                key={subject.teacher?.id}
+                src={subject.teacher?.image_url}
+                name={subject.teacher?.name}
+              />
+            ))}
           </div>
         );
       }
@@ -141,16 +180,7 @@ function StudentTable(props) {
         </p>
       ),
       cell: (info: any) => {
-        const row = info.row.original;
-        return (
-          <div className="flex justify-start w-full items-center gap-[14px]">
-            <p className="text-xs font-medium text-zinc-950 dark:text-white">
-              {info.getValue()
-                ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
-                : '-'}
-            </p>
-          </div>
-        );
+        return <DateContainer value={info.getValue()} />;
       }
     }),
 
@@ -161,15 +191,7 @@ function StudentTable(props) {
           End date
         </p>
       ),
-      cell: (info: any) => (
-        <div className="flex w-full justify-start items-center gap-3">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()
-              ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
-              : '-'}
-          </p>
-        </div>
-      )
+      cell: (info: any) => <DateContainer value={info.getValue()} />
     }),
 
     columnHelper.accessor('duration', {
@@ -230,17 +252,14 @@ function StudentTable(props) {
     columnHelper.accessor('created_at', {
       id: 'created_at',
       header: () => (
-        <p className="text-xs text-end font-semibold text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-start font-semibold text-zinc-500 dark:text-zinc-400">
           Created At
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex justify-end w-full items-center gap-[14px]">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {info.getValue()
-              ? format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')
-              : '-'}
-          </p>
+        <div className="flex flex-col items-start gap-3">
+          <DateContainer value={info.getValue()} />
+          <TimeContainer value={info.getValue()} />
         </div>
       )
     }),

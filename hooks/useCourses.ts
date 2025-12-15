@@ -38,13 +38,13 @@ export const getCourseById = (id: string | number) => {
   };
 }
 
-export const creatCourse = async(student: any) => {
+export const createCourse = async(student: any) => {
   const result = await CourseAPI.create(student);
   mutate(`/courses`);
   return result;
 }
 
-export const updateCourse = async(id: number, student: any) => {
+export const updateCourse = async(id: string | number, student: any) => {
   const result = await CourseAPI.update(id,student);
   mutate(`/courses/${id}`);
   return result;

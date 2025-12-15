@@ -1,13 +1,12 @@
-import EditCoursePage from '@/components/dashboard/courses/edit';
+import CourseEditPage from '@/components/dashboard/courses/edit';
 
-export default async function Editcourse({
+export default async function CourseEdit({
   params
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
- 
   return (
-    <EditCoursePage />
+    <CourseEditPage id={id}/>
   );
 }

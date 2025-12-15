@@ -1,26 +1,12 @@
 /*eslint-disable*/
 'use client';
-import { useRouter } from 'next/navigation';
 
-import CoursesTable from '@/components/dashboard/courses/table/CoursesTable';
 import DashboardLayout from '@/components/layout';
-import { Button } from '@/components/ui/button';
-import { User } from '@supabase/supabase-js';
-import Link from 'next/link';
-import {
-  LuChevronsLeft,
-  LuArrowLeft,
-  LuCircleFadingPlus
-} from 'react-icons/lu';
-import { toast, Toaster } from 'sonner';
-import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
-import Separator from '@/components/auth-ui/Separator';
 import { Badge } from '@/components/ui/badge';
-import { getStudentById } from '@/hooks/useStudents';
 import { getCourseById } from '@/hooks/useCourses';
-import { AssignTeacherDialogForm } from '../components/AsignTeacherDialogForm';
-import { AssignStudentDialogForm } from '../components/AsignStudentDialogForm';
+import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import { Separator } from '@/components/ui/separator';
 interface Props {
   id: string | number;
 }
@@ -70,19 +56,8 @@ export default function CourseDetailsPage(props: Props) {
       title="Subscription Page"
       description="Manage your subscriptions"
     >
-      <Toaster position="top-right" />
       <div className="flex gap-5">
-        <div>
-          <Link href={'/dashboard/courses'}>
-            <Button
-              className="hover:dark:bg-gray-800 hover:dark:text-white"
-              variant="outline"
-              size="sm"
-            >
-              <LuArrowLeft />
-            </Button>
-          </Link>
-        </div>
+        <LinkBackButton href="/dashboard/courses" />
         <div className="w-full">
           <Card className={'py-3 w-full sm:overflow-auto mb-5'}>
             <div className="px-5">
@@ -124,7 +99,6 @@ export default function CourseDetailsPage(props: Props) {
             <div className="px-5">
               
 
-        <AssignTeacherDialogForm id={id} title='Assign Teacher'/>
 
                   {/* {renderRow('Teacher', course.employee?.name)} */}
 
@@ -138,7 +112,6 @@ export default function CourseDetailsPage(props: Props) {
             </div>
             <Separator />
             <div className="px-5">
-        <AssignStudentDialogForm id={id} title='Assign Student'/>
             </div>
           </Card>
         </div>

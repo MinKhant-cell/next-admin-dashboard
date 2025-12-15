@@ -9,17 +9,14 @@ import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { LuCircleFadingPlus } from 'react-icons/lu';
 import { toast, Toaster } from 'sonner';
-import { DeleteCourse } from './hooks/useCourses';
-import TableTabs from './table/TableTabs';
 import { useEffect, useMemo, useState } from 'react';
-import { deleteStudent, getStudents, useStudents } from '@/hooks/useStudents';
 import TableSkeletons from './table/TableSkeletons';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput
 } from '@/components/ui/input-group';
-import { Search } from 'lucide-react';
+import { ArrowUpIcon, Search, Filter, FolderDown } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -101,23 +98,12 @@ export default function CoursesPage() {
           </div>
 
           <div className="flex gap-3 items-center">
-            <div>
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem className="text-gray-800" value="ACTIVE">
-                      ACTIVE
-                    </SelectItem>
-                    <SelectItem className="text-gray-800" value="INACTIVE">
-                      INACTIVE
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+            <Button variant="outline" size="icon">
+              <Filter />
+            </Button>
+            <Button variant="outline" size="icon">
+              <FolderDown />
+            </Button>
 
             {/* <div>
               <Select
