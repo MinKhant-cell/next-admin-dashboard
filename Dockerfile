@@ -4,12 +4,14 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Copy package files and install dependencies
-COPY package*.json tsconfig*.json ./
+COPY package*.json ./
 
 RUN npm install --legacy-peer-deps
 
 # Copy rest of the application
 COPY . .
+
+RUN npm run init
 
 # Build the application
 RUN npm run build
@@ -22,10 +24,9 @@ WORKDIR /app
 # Copy only necessary files
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npm run start"]
+CMD ["npm", "run", "start"]
