@@ -10,10 +10,7 @@ import CourseOverviewChart from './cards/CourseOverviewChart';
 
 export default function Settings() {
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="h-full w-full">
         <div className="flex gap-5 justify-between mb-5">
           <DashboardWidget title="Total Revenue" value="$45,231" />

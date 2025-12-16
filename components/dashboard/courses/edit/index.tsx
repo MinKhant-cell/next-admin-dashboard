@@ -137,10 +137,7 @@ export default function CourseEditPage({id}: {id: string}) {
   }
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="h-full w-full flex gap-5">
         <LinkBackButton href="/dashboard/courses" />
         <div className="h-full w-full">

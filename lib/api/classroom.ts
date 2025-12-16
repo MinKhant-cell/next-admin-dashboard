@@ -18,7 +18,7 @@ export const ClassroomAPI = {
       body: data,
     }),
 
-  remove: (id: number) =>
+  remove: (id: string | number) =>
     apiClient(`/classrooms/${id}`, {
       method: "DELETE",
     }),

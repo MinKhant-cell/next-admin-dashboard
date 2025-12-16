@@ -22,17 +22,8 @@ import {
   FieldGroup,
   FieldLabel
 } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea
-} from '@/components/ui/input-group';
-import Link from 'next/link';
-import { LuArrowLeft } from 'react-icons/lu';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
 import {
-  createTeacher,
   getTeacherById,
   updateTeacher
 } from '@/hooks/useTeachers';
@@ -42,22 +33,20 @@ const formSchema = z.object({
     .string()
     .min(5, 'Name must be at least 5 characters.')
     .max(32, 'Name must be at most 32 characters.'),
-  description: z
-    .string()
-    .min(10, 'Description must be at least 10 characters.')
-    .max(100, 'Description must be at most 100 characters.')
-    .optional(),
-
-  email: z.string().email('Invalid email address.'),
-
-  phone: z.string().regex(/^[0-9]{10,15}$/, 'Phone must be 10–15 digits.'),
-
-  image: z.instanceof(File).nullable().optional()
+  email: z
+  .string()
+  .email('Invalid email address.'),
+  phone: z
+  .string()
+  .regex(/^[0-9]{10,15}$/, 'Phone must be 10–15 digits.'),
+  image: z
+  .instanceof(File)
+  .nullable()
+  .optional()
 });
 
 export default function TeacherEditPage({ id }: { id: number | string }) {
   const { teacher, isLoading, isError } = getTeacherById(id);
-  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,19 +62,19 @@ export default function TeacherEditPage({ id }: { id: number | string }) {
       form.reset({
         name: teacher.name,
         email: teacher.email,
-        phone: teacher.phone
+        phone: teacher.phone,
       });
     }
   }, [teacher, form.reset]);
 
-  async function onSubmit(subject: z.infer<typeof formSchema>) {
+  async function onSubmit(teacher: z.infer<typeof formSchema>) {
     const formData = new FormData();
-    formData.append('name', subject.name);
-    formData.append('email', subject.email);
-    formData.append('phone', subject.phone);
+    formData.append('name', teacher.name);
+    formData.append('email', teacher.email);
+    formData.append('phone', teacher.phone);
 
-    if (subject.image instanceof File) {
-      formData.append('image', subject.image);
+    if (teacher.image instanceof File) {
+      formData.append('image', teacher.image);
     }
     const { error, data, status } = await updateTeacher(id, formData);
     if (!error) {
@@ -98,10 +87,7 @@ export default function TeacherEditPage({ id }: { id: number | string }) {
   }
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="h-full w-full flex gap-5">
         <LinkBackButton href="/dashboard/teachers" />
         <div className="h-full w-full">
@@ -129,7 +115,9 @@ export default function TeacherEditPage({ id }: { id: number | string }) {
                         >
                           Name
                         </FieldLabel>
-                        <Input {...field} id="name" placeholder="Enter Name" />
+                        <Input {...field} 
+                        id="name" 
+                        placeholder="Enter Name" />
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
                         )}

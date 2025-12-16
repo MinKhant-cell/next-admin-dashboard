@@ -82,10 +82,7 @@ export default function TeacherCreatePage() {
   }
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="h-full w-full flex gap-5">
         <LinkBackButton href="/dashboard/teachers" />
         <div className="h-full w-full">

@@ -56,11 +56,7 @@ export default function StudentDetailsPage(props: Props) {
     </div>
   );
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
-      <Toaster position="top-right" />
+    <DashboardLayout>
       <div className="flex gap-5">
         <LinkBackButton href="/dashboard/students" />
         <Card className={'h-full py-3 w-full sm:overflow-auto'}>
