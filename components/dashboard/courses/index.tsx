@@ -65,10 +65,7 @@ export default function CoursesPage() {
   };
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <Toaster position="top-right" />
       <div className="min-h-screen w-full">
         <div className="flex items-center justify-between mb-5">

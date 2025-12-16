@@ -5,7 +5,7 @@ import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import React, { useState } from 'react';
-import { Controller, useForm, FormProvider } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
@@ -13,7 +13,6 @@ import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Spinner } from "@/components/ui/spinner"
-import { creatSubject } from '@/hooks/useSubject';
 import {
   Field,
   FieldDescription,
@@ -28,6 +27,7 @@ import {
   InputGroupTextarea
 } from '@/components/ui/input-group';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import { createClassroom } from '@/hooks/useClassrooms';
 
 const formSchema = z.object({
   name: z
@@ -38,19 +38,27 @@ const formSchema = z.object({
     .string()
     .min(10, "Description must be at least 10 characters.")
     .max(100, "Description must be at most 100 characters.")
-    .optional(),
+    .optional()
+    .or(z.literal("")),
+  grade: z
+    .string()
+    .min(1, "Grade must be at least 1 characters.")
+    .max(100, "Grade must be at most 100 characters.")
+    .optional()
+    .or(z.literal("")),
   image: z
     .instanceof(File)
     .nullable()
     .optional()
 })
 
-export default function SubjectsCreatePage() {
+export default function ClassroomCreatePage() {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      grade: '',
       description: '',
       image: null
     }
@@ -59,33 +67,31 @@ export default function SubjectsCreatePage() {
   async function onSubmit(subject: z.infer<typeof formSchema>) {
       const formData = new FormData();
       formData.append("name", subject.name);
+      formData.append("grade", subject.grade);
       formData.append("description", subject.description);
 
       if (subject.image instanceof File) {
         formData.append("image", subject.image);
       }
-    const {error, data, status} = await creatSubject(formData);
+    const {error, data, status} = await createClassroom(formData);
         if(!error){
-          toast.success("Subject Created Successfully 🎉");
+          toast.success("Classroom Created Successfully 🎉");
           form.reset();
-          router.push('/dashboard/subjects')
+          router.push('/dashboard/classrooms')
         }else {
-          toast.error("Something went wrong 😢");
+          toast.error("Classroom Created Fail 😢");
         }
   }
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="h-full w-full flex gap-5">
-        <LinkBackButton href="/dashboard/subjects" />
+        <LinkBackButton href="/dashboard/classrooms" />
         <div className="h-full w-full">
           <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
           <div className="mb-5">
 <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-            Create Subject
+            Create Classroom
           </h1>
           </div>
           
@@ -106,6 +112,29 @@ export default function SubjectsCreatePage() {
                         {...field}
                         id="name"
                         placeholder="Enter Name"
+
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="grade"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel
+                        className="text-gray-600 dark:text-zinc-200"
+                        htmlFor="name"
+                      >
+                        Grade
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="grade"
+                        placeholder="Enter Grade"
 
                       />
                       {fieldState.invalid && (

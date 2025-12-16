@@ -54,10 +54,7 @@ export default function SubjectDetailsPage(props: Props) {
     </div>
   );
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <Toaster position="top-right" />
       <div className="flex gap-5">
         <LinkBackButton href="/dashboard/subjects" />

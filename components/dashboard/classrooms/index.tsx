@@ -18,7 +18,7 @@ import {
 import { Search, Filter, FolderDown } from 'lucide-react';
 import { mutate } from 'swr';
 import { deleteCourse } from '@/hooks/useCourses';
-import { getClassrooms } from '@/hooks/useClassrooms';
+import { deleteClassroom, getClassrooms } from '@/hooks/useClassrooms';
 
 export default function ClassroomsPage() {
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -43,11 +43,11 @@ export default function ClassroomsPage() {
     return () => clearTimeout(searchHandler);
   }, [debouncedSearch]);
 
-  const handleCoursesDelete = async (id: number) => {
-    const { status, message, error } = await deleteCourse(id);
+  const handleClassroomDelete = async (id: number) => {
+    const { status, message, error } = await deleteClassroom(id);
     if (!error && status == 204) {
       if (filter.search) fetchParams.append('search', filter.search);
-      mutate(`/courses?${fetchParams.toString()}`);
+      mutate(`/classrooms?${fetchParams.toString()}`);
       toast.success(message);
     } else {
       toast.error(message);
@@ -55,15 +55,12 @@ export default function ClassroomsPage() {
   };
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <Toaster position="top-right" />
       <div className="min-h-screen w-full">
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-xl text-gray-700 font-semibold">Classrooms List</h1>
-          <Link href={'/dashboard/courses/create'}>
+          <Link href={'/dashboard/classrooms/create'}>
             <Button
               className="hover:dark:bg-gray-800 hover:dark:text-white"
               variant="outline"
@@ -106,7 +103,7 @@ export default function ClassroomsPage() {
               totalCount={classrooms.meta?.total || 0}
               pagination={pagination}
               onPaginationChange={setPagination}
-              onDelete={handleCoursesDelete}
+              onDelete={handleClassroomDelete}
             />
           )}
         </div>

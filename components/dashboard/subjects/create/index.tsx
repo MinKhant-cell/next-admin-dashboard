@@ -75,10 +75,7 @@ export default function SubjectsCreatePage() {
   }
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="h-full w-full flex gap-5">
         <LinkBackButton href="/dashboard/subjects" />
         <div className="h-full w-full">

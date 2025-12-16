@@ -68,11 +68,7 @@ export default function TeachersPage() {
   };
 
   return (
-    <DashboardLayout
-      
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
+    <DashboardLayout>
       <div className="min-h-screen w-full">
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-xl text-gray-700 font-semibold">Teachers List</h1>

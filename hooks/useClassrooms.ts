@@ -34,31 +34,31 @@ export const getClassrooms = (page = 1, limit = 10, filter) => {
   };
 }
 
-export const getStudentById = (id: string | number) => {
+export const getClassroomById = (id: string | number) => {
   const { data, error, isLoading } = useSWR(
-    `/students/${id}`,
+    `/classrooms/${id}`,
     fetcher
   );
   return {
-    student: data ?? null,
+    classroom: data ?? null,
     isLoading,
     isError: error,
   };
 }
 
-export const creatStudent = async(student: any) => {
-  const result = await ClassroomAPI.create(student);
-  mutate(`/students`);
+export const createClassroom = async(classroom: any) => {
+  const result = await ClassroomAPI.create(classroom);
+  mutate(`/classrooms`);
   return result;
 }
 
-export const updateStudent = async(id: number, student: any) => {
+export const updateClassroom = async(id: string | number, student: any) => {
   const result = await ClassroomAPI.update(id,student);
-  mutate(`/students`);
+  mutate(`/classrooms/${id}`);
   return result;
 }
 
-export const deleteStudent = async(id: number) => {
+export const deleteClassroom = async(id: string | number) => {
   const result = await ClassroomAPI.remove(id);;
   return result;
 }

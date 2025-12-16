@@ -57,11 +57,7 @@ export default function TimetablesPage() {
   };
 
   return (
-    <DashboardLayout
-      title="Subscription Page"
-      description="Manage your subscriptions"
-    >
-      <Toaster position="top-right" />
+    <DashboardLayout>
       <div className="min-h-screen w-full">
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-xl text-gray-700 font-semibold">Timetables List</h1>

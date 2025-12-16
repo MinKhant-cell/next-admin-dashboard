@@ -32,6 +32,7 @@ import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import ActionDropdown from './ActionDropdown';
 import Link from 'next/link';
 import DateContainer from '@/components/ui-components/DateContainer';
+import TimeContainer from '@/components/ui-components/TimeContainer';
 
 const statusColors: Record<string, string> = {
   upcoming:
@@ -168,8 +169,9 @@ function ClassroomTable(props) {
         </p>
       ),
       cell: (info: any) => (
-        <div className="flex justify-start w-full items-center gap-[14px]">
+        <div className="flex flex-col items-start gap-3">
           <DateContainer value={info.getValue()} />
+          <TimeContainer value={info.getValue()} />
         </div>
       )
     }),
