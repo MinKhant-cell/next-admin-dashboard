@@ -27,6 +27,7 @@ import {
   getTeacherById,
   updateTeacher
 } from '@/hooks/useTeachers';
+import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
 
 const formSchema = z.object({
   name: z
@@ -88,125 +89,102 @@ export default function TeacherEditPage({ id }: { id: number | string }) {
 
   return (
     <DashboardLayout>
-      <div className="h-full w-full flex gap-5">
-        <LinkBackButton href="/dashboard/teachers" />
-        <div className="h-full w-full">
-          <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
-            <div className="mb-5">
-              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-                Update Teacher
-              </h1>
-            </div>
-            {isLoading && <Spinner />}
-            {!isLoading && !isError && (
-              <form
-                id="subject-create-form"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
-                <FieldGroup>
-                  <Controller
-                    name="name"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel
-                          className="text-gray-600 dark:text-zinc-200"
-                          htmlFor="name"
-                        >
-                          Name
-                        </FieldLabel>
-                        <Input {...field} 
-                        id="name" 
-                        placeholder="Enter Name" />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                  <Controller
-                    name="email"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel
-                          className="text-gray-600 dark:text-zinc-200"
-                          htmlFor="email"
-                        >
-                          Email
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="email"
-                          placeholder="Enter Email"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                  <Controller
-                    name="phone"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel
-                          className="text-gray-600 dark:text-zinc-200"
-                          htmlFor="phone"
-                        >
-                          Phone
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="phone"
-                          placeholder="Enter Phone"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-
-                  <Controller
-                    name="image"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel
-                          className="text-gray-600 dark:text-zinc-200"
-                          htmlFor="image"
-                        >
-                          Image Upload
-                        </FieldLabel>
-                        <ImageUploadInput
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </FieldGroup>
-                <div className="my-5">
-                  <Button
-                    type="submit"
-                    form="subject-create-form"
-                    disabled={form.formState.isSubmitting}
-                  >
-                    {form.formState.isSubmitting && <Spinner />}
-                    Update
-                  </Button>
-                </div>
-              </form>
-            )}
-          </Card>
+  <div className="h-full w-full flex flex-col gap-5">
+    {/* <div className="flex gap-5">
+      <LinkBackButton href="/dashboard/teachers" />
+    </div> */}
+    
+    <div className="w-full">
+      <Card className="h-[80vh] w-full p-5 sm:overflow-auto">
+        <div className="flex items-center justify-between mb-6 pb-4 border-b">
+          <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-xl">
+            Update Teacher
+          </h1>
+          <BreadCrumbs />
         </div>
-      </div>
-    </DashboardLayout>
+        
+        {isLoading && <Spinner />}
+        
+        {!isLoading && !isError && (
+          <form id="teacher-edit-form" onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                name="name"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="name">
+                      Name
+                    </FieldLabel>
+                    <Input {...field} id="name" placeholder="Enter Name" />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="email">
+                      Email
+                    </FieldLabel>
+                    <Input {...field} id="email" placeholder="Enter Email" />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="phone"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="phone">
+                      Phone
+                    </FieldLabel>
+                    <Input {...field} id="phone" placeholder="Enter Phone" />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="image"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="image">
+                      Image Upload
+                    </FieldLabel>
+                    <ImageUploadInput value={field.value} onChange={field.onChange} />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <div className="my-5">
+              <Button
+                type="submit"
+                form="teacher-edit-form"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && <Spinner />}
+                Update
+              </Button>
+            </div>
+          </form>
+        )}
+      </Card>
+    </div>
+  </div>
+</DashboardLayout>
+
   );
 }

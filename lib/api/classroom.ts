@@ -6,11 +6,28 @@ export const ClassroomAPI = {
 
   getById: (id: number) => apiClient(`/classrooms/${id}`),
 
-  create: (data: any) =>
-    apiClient("/classrooms", {
-      method: "POST",
-      body: data,
-    }),
+  // create: (data: any) =>
+  //   apiClient("/classrooms", {
+  //     method: "POST",
+  //     body: data,
+  //   }),
+
+    create: async (data: any) => {
+      // PROOF LOG - BE MUST SEE THIS
+      console.log(' FE sending FormData:');
+      for (let [key, value] of data.entries()) {
+        console.log(`${key}:`, value);
+      }
+      
+      const result = await apiClient("/classrooms", {
+        method: "POST",
+        body: data,
+      });
+      
+      console.log(' BE returned:', result);
+      return result;
+    },
+      
 
   update: (id: string | number, data: any) =>
     apiClient(`/classrooms/${id}`, {

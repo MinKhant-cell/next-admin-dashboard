@@ -138,7 +138,7 @@ function ClassroomTable(props) {
         </p>
       ),
       cell: (info) => (
-        <Link href={`/dashboard/courses/${info.row.original.id}`}>
+        <Link href={`/dashboard/classrooms/${info.row.original.id}`}>
           <p className="text-xs font-medium text-zinc-950 dark:text-white">
             {info.getValue()}
           </p>

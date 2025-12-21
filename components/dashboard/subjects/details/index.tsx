@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { getSubjectById } from '@/hooks/useSubject';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
 import { Separator } from '@/components/ui/separator';
+import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
 interface Props {
   id: string | number;
 }
@@ -55,49 +56,36 @@ export default function SubjectDetailsPage(props: Props) {
   );
   return (
     <DashboardLayout>
-      <Toaster position="top-right" />
-      <div className="flex gap-5">
-        <LinkBackButton href="/dashboard/subjects" />
-        
-        <div className="w-full">
-          <Card className={'py-3 w-full sm:overflow-auto mb-5'}>
-            <div className="px-5">
-              <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-                Subject Information
-              </h1>
-            </div>
-            <Separator />
-
-            <div className="px-5">
-              {isLoading ? (
-                <p>Loading ...</p>
-              ) : (
-                <div>
-                  {/* <p className="text-green-500">
-                  {JSON.stringify(subject)}
-                </p> */}
-                  {renderRow('Name', subject.name)}
-                  {renderRow('Description', subject.description)}
-                  {renderRow('Image', subject.image_url)}
-                  {renderRow('Created At', subject.created_at)}
-
-                  {/* {renderRow('Name', course.name)}
-                  {renderRow('Start Date', course.start_date)}
-                  {renderRow('End Date', course.end_date)}
-                  {renderRow('Duration', course.duration)}
-                  {renderRow('Fees', course.fees + ' ' + course.currency)}
-                  {renderRow('Status', course.status)}
-                  {renderRow('Description', course.description)}
-                  {renderRow('Publish', course.is_publish ? 'Yes' : 'No')}
-                  {renderRow('Created At', course.created_at)} */}
-                </div>
-              )}
-            </div>
-          </Card>
-          
+  <Toaster position="top-right" />
+  <div className="flex gap-5">
+    <div className="w-full">
+      <Card className="py-3 w-full sm:overflow-auto mb-5">
+        <div className="px-5 py-3 h-16 flex items-center justify-between">
+          <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
+            Subject Information
+          </h1>
+          <div className="ml-auto">
+            <BreadCrumbs />
+          </div>
         </div>
-      </div>
-      <div></div>
-    </DashboardLayout>
+        
+        <Separator />
+        <div className="m-5">
+          {isLoading ? (
+            <p>Loading ...</p>
+          ) : (
+            <div>
+              {renderRow('Name', subject.name)}
+              {renderRow('Description', subject.description)}
+              {renderRow('Image', subject.image_url)}
+              {renderRow('Created At', subject.created_at)}
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
+  </div>
+</DashboardLayout>
+
   );
 }

@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/field';
 import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
 
 const formSchema = z.object({
   name: z
@@ -72,34 +73,35 @@ export default function StudentEditPage({ id }: any) {
 
   return (
     <DashboardLayout>
-      <div className="h-full w-full flex gap-5">
+    <div className="h-full w-full flex flex-col gap-5">
+     
+      {/* <div className="flex gap-5">
         <LinkBackButton href="/dashboard/subjects" />
-
-        <div className="h-full w-full rounded-lg ">
-          <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
-            <div className="mb-5">
-              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
-                Edit Student
-              </h1>
-            </div>
-
-            {isLoading && <Spinner />}
-
-            {!isLoading && !isError && (
-                 <form
-              id="subject-create-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+      </div> */}
+      
+   
+      <div className="w-full">
+        <Card className="h-[80vh] w-full p-5 sm:overflow-auto">
+          {/* Header: Title LEFT + Breadcrumbs RIGHT */}
+          <div className="flex items-center justify-between mb-6 pb-4 border-b">
+            <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-xl">
+              Edit Student
+            </h1>
+            <BreadCrumbs />
+          </div>
+          
+        
+          {isLoading && <Spinner />}
+          
+          {!isLoading && !isError && (
+            <form id="student-edit-form" onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
                 <Controller
                   name="name"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="name"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="name">
                         Name
                       </FieldLabel>
                       <Input {...field} id="name" placeholder="Enter Name" />
@@ -114,10 +116,7 @@ export default function StudentEditPage({ id }: any) {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="description"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="description">
                         Description
                       </FieldLabel>
                       <InputGroup>
@@ -129,7 +128,6 @@ export default function StudentEditPage({ id }: any) {
                           className="min-h-24 resize-none"
                         />
                       </InputGroup>
-
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -141,17 +139,10 @@ export default function StudentEditPage({ id }: any) {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="image"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="image">
                         Image Upload
                       </FieldLabel>
-                      <ImageUploadInput
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-
+                      <ImageUploadInput value={field.value} onChange={field.onChange} />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -162,7 +153,7 @@ export default function StudentEditPage({ id }: any) {
               <div className="my-5">
                 <Button
                   type="submit"
-                  form="subject-create-form"
+                  form="student-edit-form"
                   disabled={form.formState.isSubmitting}
                 >
                   {form.formState.isSubmitting && <Spinner />}
@@ -170,12 +161,11 @@ export default function StudentEditPage({ id }: any) {
                 </Button>
               </div>
             </form>
-            )}
-
-        
-          </Card>
-        </div>
+          )}
+        </Card>
       </div>
-    </DashboardLayout>
+    </div>
+  </DashboardLayout>
+  
   );
 }

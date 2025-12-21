@@ -18,6 +18,7 @@ import { Search } from 'lucide-react';
 import { mutate } from 'swr';
 import SubjectsTable from './table/SubjectsTable';
 import { deleteSubject, getSubjects } from '@/hooks/useSubject';
+import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
 
 export default function SubjectsPage() {
   const router = useRouter();

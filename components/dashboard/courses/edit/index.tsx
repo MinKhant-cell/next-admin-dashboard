@@ -36,7 +36,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { createCourse, getCourseById, updateCourse } from '@/hooks/useCourses';
-import { start } from 'repl';
+import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
 
 const formSchema = z
   .object({
@@ -70,24 +70,24 @@ const formSchema = z
   .refine(
     (data) => {
       if (!data.start_date || !data.end_date) return true;
-
       return data.end_date >= data.start_date;
     },
     {
       message: 'End date must be after start date',
-      path: ['end_date'] // attach error to end_date field
+      path: ['end_date']
     }
   );
 
 export default function CourseEditPage({id}: {id: string}) {
   const router = useRouter();
   const { course, isLoading, isError } = getCourseById(id);
+  
   const toDateInputValue = (value?: string | Date | null) => {
-  if (!value) return ""
-
-  const date = value instanceof Date ? value : new Date(value)
-  return date.toISOString().split("T")[0]
-}
+    if (!value) return ""
+    const date = value instanceof Date ? value : new Date(value)
+    return date.toISOString().split("T")[0]
+  }
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,17 +102,17 @@ export default function CourseEditPage({id}: {id: string}) {
   });
 
   useEffect(() => {
-      if (course) {
-        form.reset({
-          name: course.name,
-          description: course.description ?? '',
-          start_date: toDateInputValue(course.start_date),
-          end_date: toDateInputValue(course.end_date),
-          fees: course.fees,
-          currency: course.currency
-        });
-      }
-    }, [course, form.reset]);
+    if (course) {
+      form.reset({
+        name: course.name,
+        description: course.description ?? '',
+        start_date: toDateInputValue(course.start_date),
+        end_date: toDateInputValue(course.end_date),
+        fees: course.fees,
+        currency: course.currency
+      });
+    }
+  }, [course, form.reset]);
 
   async function onSubmit(course: z.infer<typeof formSchema>) {
     const formData = new FormData();
@@ -130,7 +130,6 @@ export default function CourseEditPage({id}: {id: string}) {
     if (!error) {
       toast.success('Course Updated Successfully 🎉');
       form.reset();
-      // router.push('/dashboard/courses');
     } else {
       toast.error('Course Updated Fail 😢');
     }
@@ -138,29 +137,28 @@ export default function CourseEditPage({id}: {id: string}) {
 
   return (
     <DashboardLayout>
-      <div className="h-full w-full flex gap-5">
-        <LinkBackButton href="/dashboard/courses" />
-        <div className="h-full w-full">
-          <Card className={'h-full w-1/2 p-5 sm:overflow-auto'}>
-            <div className="mb-5">
-              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-lg">
+      <div className="h-full w-full flex flex-col gap-5">
+        {/* <div className="flex gap-5">
+          <LinkBackButton href="/dashboard/courses" />
+        </div> */}
+        
+        <div className="w-full">
+          <Card className="h-[80vh] w-full p-5 sm:overflow-auto">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b">
+              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-xl">
                 Edit Course
               </h1>
+              <BreadCrumbs />
             </div>
-            <form
-              id="subject-create-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-            >
+            
+            <form id="course-edit-form" onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
                 <Controller
                   name="name"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="name"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="name">
                         Name
                       </FieldLabel>
                       <Input {...field} id="name" placeholder="Enter Name" />
@@ -175,10 +173,7 @@ export default function CourseEditPage({id}: {id: string}) {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="description"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="description">
                         Description
                       </FieldLabel>
                       <InputGroup>
@@ -190,7 +185,6 @@ export default function CourseEditPage({id}: {id: string}) {
                           className="min-h-24 resize-none"
                         />
                       </InputGroup>
-
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -202,10 +196,7 @@ export default function CourseEditPage({id}: {id: string}) {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="start_date"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="start_date">
                         Start Date
                       </FieldLabel>
                       <Input
@@ -220,16 +211,12 @@ export default function CourseEditPage({id}: {id: string}) {
                     </Field>
                   )}
                 />
-
                 <Controller
                   name="end_date"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="end_date"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="end_date">
                         End Date
                       </FieldLabel>
                       <Input
@@ -244,16 +231,12 @@ export default function CourseEditPage({id}: {id: string}) {
                     </Field>
                   )}
                 />
-
                 <Controller
                   name="fees"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="fees"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="fees">
                         Fees
                       </FieldLabel>
                       <Input
@@ -268,56 +251,38 @@ export default function CourseEditPage({id}: {id: string}) {
                     </Field>
                   )}
                 />
-
                 <Controller
                   name="currency"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="currency"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="currency">
                         Currency
                       </FieldLabel>
-
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
+                      <Select value={field.value} onValueChange={field.onChange}>
                         <SelectTrigger id="currency">
                           <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
-
                         <SelectContent className="text-gray-600">
                           <SelectItem value="THB">THB</SelectItem>
                           <SelectItem value="USD">USD</SelectItem>
                         </SelectContent>
                       </Select>
-
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </Field>
                   )}
                 />
-
                 <Controller
                   name="image"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel
-                        className="text-gray-600 dark:text-zinc-200"
-                        htmlFor="image"
-                      >
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="image">
                         Image Upload
                       </FieldLabel>
-                      <ImageUploadInput
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-
+                      <ImageUploadInput value={field.value} onChange={field.onChange} />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -328,7 +293,7 @@ export default function CourseEditPage({id}: {id: string}) {
               <div className="my-5">
                 <Button
                   type="submit"
-                  form="subject-create-form"
+                  form="course-edit-form"
                   disabled={form.formState.isSubmitting}
                 >
                   {form.formState.isSubmitting && <Spinner />}

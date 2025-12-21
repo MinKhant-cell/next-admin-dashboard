@@ -9,6 +9,7 @@ import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
 import { CustomTrigger } from './custom-trigger';
+import { ThemeToggle } from './theme-toggle';
 
 export function SiteHeader() {
   const { theme, setTheme } = useTheme();
@@ -22,18 +23,8 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-base font-medium">Documents</h1>
-        {/* <Button
-                variant="outline"
-                className="flex h-9 min-w-9 cursor-pointer rounded-full border-zinc-200 p-0 text-xl text-zinc-950 dark:border-zinc-800 dark:text-white md:min-h-10 md:min-w-10"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              >
-                {theme === 'light' ? (
-                  <Moon className="h-4 w-4 stroke-2" />
-                ) : (
-                  <Sun className="h-5 w-5 stroke-2" />
-                )}
-              </Button> */}
         <div className="ml-auto flex items-center gap-2">
+        <ThemeToggle/>
           <Link href={'/dashboard/settings'}>
             <AvatarContainer
               src={'https://github.com/evilrabbit.png'}
