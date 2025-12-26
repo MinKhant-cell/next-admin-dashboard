@@ -8,7 +8,7 @@ export default function LinkBackButton({ href }: { href: string }) {
           <Link href={href}>
             <Button
               className="hover:dark:bg-gray-800 hover:dark:text-white"
-              variant="outline"
+              variant="ghost"
               size="sm"
             >
               <LuArrowLeft />

@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import React from 'react';
+import ProtectedRoute from '../protected-routes';
 
 interface Props {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface Props {
 
 const DashboardLayout: React.FC<Props> = (props: Props) => {
   return (
+    // <ProtectedRoute> </ProtectedRoute>
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
@@ -25,6 +27,7 @@ const DashboardLayout: React.FC<Props> = (props: Props) => {
         </div>
       </SidebarInset>
     </SidebarProvider>
+   
   );
 };
 

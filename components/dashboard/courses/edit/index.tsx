@@ -3,31 +3,23 @@
 
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Spinner } from '@/components/ui/spinner';
+import { getCourseById, updateCourse } from '@/hooks/useCourses';
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel
 } from '@/components/ui/field';
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea
-} from '@/components/ui/input-group';
-import LinkBackButton from '@/components/ui-components/LinkBackButton';
+import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
 import {
   Select,
   SelectContent,
@@ -35,37 +27,17 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { createCourse, getCourseById, updateCourse } from '@/hooks/useCourses';
-import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
+import { ReusableEditCard } from '@/components/ui-components/ReusableEditCard';
 
 const formSchema = z
   .object({
-    name: z
-      .string()
-      .min(5, 'Name must be at least 5 characters.')
-      .max(32, 'Name must be at most 32 characters.'),
-    description: z
-      .string()
-      .min(10, 'Description must be at least 10 characters.')
-      .max(100, 'Description must be at most 100 characters.')
-      .optional()
-      .or(z.literal("")),
-    start_date: z
-      .string(),
-    end_date: z
-      .string(),
-    fees: z
-      .coerce
-      .number()
-      .min(2, 'Fee must be at least 2 digits.')
-      .max(1000000, 'Fee must be at most 1000000 digits.')
-      .optional(),
-    currency: z
-      .enum(['THB', 'USD'], {
-        required_error: 'Currency is required.'
-      })
-      .optional(),
-    image: z.instanceof(File).nullable().optional()
+    name: z.string().min(5, 'Name must be at least 5 characters.').max(32, 'Name must be at most 32 characters.'),
+    description: z.string().optional().or(z.literal('')),
+    start_date: z.string(),
+    end_date: z.string(),
+    fees: z.coerce.number().min(2).max(1000000).optional(),
+    currency: z.enum(['THB', 'USD']).optional(),
+    image: z.any().optional() // ✅ Keep for UI, ignore in JSON
   })
   .refine(
     (data) => {
@@ -78,17 +50,19 @@ const formSchema = z
     }
   );
 
-export default function CourseEditPage({id}: {id: string}) {
+type FormData = z.infer<typeof formSchema>;
+
+const toDateInputValue = (value?: string | Date | null) => {
+  if (!value) return '';
+  const date = value instanceof Date ? value : new Date(value);
+  return date.toISOString().split('T')[0];
+};
+
+export default function CourseEditPage({ id }: { id: string }) {
+  const { course, isError, isLoading } = getCourseById(id);
   const router = useRouter();
-  const { course, isLoading, isError } = getCourseById(id);
-  
-  const toDateInputValue = (value?: string | Date | null) => {
-    if (!value) return ""
-    const date = value instanceof Date ? value : new Date(value)
-    return date.toISOString().split("T")[0]
-  }
-  
-  const form = useForm<z.infer<typeof formSchema>>({
+
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -104,55 +78,65 @@ export default function CourseEditPage({id}: {id: string}) {
   useEffect(() => {
     if (course) {
       form.reset({
-        name: course.name,
-        description: course.description ?? '',
+        name: course.name || '',
+        description: course.description || '',
         start_date: toDateInputValue(course.start_date),
         end_date: toDateInputValue(course.end_date),
-        fees: course.fees,
-        currency: course.currency
+        fees: course.fees || 0,
+        currency: course.currency || 'THB',
+        image: null
       });
     }
-  }, [course, form.reset]);
+  }, [course, form]);
 
-  async function onSubmit(course: z.infer<typeof formSchema>) {
-    const formData = new FormData();
-    formData.append('name', course.name);
-    formData.append('description', course.description);
-    formData.append('start_date', course.start_date);
-    formData.append('end_date', course.end_date);
-    formData.append('fees', String(course.fees));
-    formData.append('currency', course.currency);
+  
+  async function onSubmit(data: FormData) {
+    const updateData = {
+      name: data.name,
+      description: data.description || '',
+      startDate: data.start_date ? `${data.start_date}T00:00:00.000Z` : '',
+      endDate: data.end_date ? `${data.end_date}T00:00:00.000Z` : '',
+      fees: Number(data.fees),  // ✅ Ensure number
+      currency: data.currency || 'THB'
+    };
+  
+    console.log('📤 FIXED payload:', updateData);
 
-    if (course.image instanceof File) {
-      formData.append('image', course.image);
-    }
-    const { error, data, status } = await updateCourse(id, formData);
-    if (!error) {
+    try {
+      const response = await updateCourse(id, updateData);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ API Error:', errorData);
+        toast.error(errorData.message || 'Course Update Failed 😢');
+        return;
+      }
+
+      const result = await response.json();
+      console.log('✅ Update success:', result);
       toast.success('Course Updated Successfully 🎉');
-      form.reset();
-    } else {
-      toast.error('Course Updated Fail 😢');
+      router.push('/dashboard/courses');
+    } catch (error) {
+      console.error('❌ Update error:', error);
+      toast.error('Course Update Failed 😢');
     }
   }
 
   return (
     <DashboardLayout>
-      <div className="h-full w-full flex flex-col gap-5">
-        {/* <div className="flex gap-5">
-          <LinkBackButton href="/dashboard/courses" />
-        </div> */}
-        
-        <div className="w-full">
-          <Card className="h-[80vh] w-full p-5 sm:overflow-auto">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b">
-              <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-xl">
-                Edit Course
-              </h1>
-              <BreadCrumbs />
-            </div>
-            
-            <form id="course-edit-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <Toaster position="top-right" />
+      <div className="w-full">
+        <ReusableEditCard
+          title="Course"
+          backHref="/dashboard/courses"
+          breadcrumbPath={`/dashboard/courses/${id}`}
+          breadcrumbName={course?.name}
+          isLoading={isLoading || isError}
+        >
+          {!isLoading && !isError && course && (
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
+                {/* Name */}
                 <Controller
                   name="name"
                   control={form.control}
@@ -162,12 +146,12 @@ export default function CourseEditPage({id}: {id: string}) {
                         Name
                       </FieldLabel>
                       <Input {...field} id="name" placeholder="Enter Name" />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
+
+                {/* Description */}
                 <Controller
                   name="description"
                   control={form.control}
@@ -185,12 +169,12 @@ export default function CourseEditPage({id}: {id: string}) {
                           className="min-h-24 resize-none"
                         />
                       </InputGroup>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
+
+                {/* Start Date */}
                 <Controller
                   name="start_date"
                   control={form.control}
@@ -199,18 +183,13 @@ export default function CourseEditPage({id}: {id: string}) {
                       <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="start_date">
                         Start Date
                       </FieldLabel>
-                      <Input
-                        {...field}
-                        id="start_date"
-                        type="date"
-                        placeholder="Select start date"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      <Input {...field} id="start_date" type="date" />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
+
+                {/* End Date */}
                 <Controller
                   name="end_date"
                   control={form.control}
@@ -219,18 +198,13 @@ export default function CourseEditPage({id}: {id: string}) {
                       <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="end_date">
                         End Date
                       </FieldLabel>
-                      <Input
-                        {...field}
-                        id="end_date"
-                        type="date"
-                        placeholder="Select end date"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      <Input {...field} id="end_date" type="date" />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
+
+                {/* Fees */}
                 <Controller
                   name="fees"
                   control={form.control}
@@ -244,13 +218,15 @@ export default function CourseEditPage({id}: {id: string}) {
                         type="number"
                         id="fees"
                         placeholder="Enter Fees"
+                        min="2"
+                        max="1000000"
                       />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
+
+                {/* Currency */}
                 <Controller
                   name="currency"
                   control={form.control}
@@ -263,46 +239,46 @@ export default function CourseEditPage({id}: {id: string}) {
                         <SelectTrigger id="currency">
                           <SelectValue placeholder="Select currency" />
                         </SelectTrigger>
-                        <SelectContent className="text-gray-600">
+                        <SelectContent>
                           <SelectItem value="THB">THB</SelectItem>
                           <SelectItem value="USD">USD</SelectItem>
                         </SelectContent>
                       </Select>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
                   )}
                 />
+
+                {/* Image - UI only */}
                 <Controller
                   name="image"
                   control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel className="text-gray-600 dark:text-zinc-200" htmlFor="image">
-                        Image Upload
+                  render={({ field }) => (
+                    <Field>
+                      <FieldLabel className="text-gray-600 dark:text-zinc-200">
+                        Profile Image (Optional)
                       </FieldLabel>
                       <ImageUploadInput value={field.value} onChange={field.onChange} />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        Image updates require separate endpoint
+                      </p>
                     </Field>
                   )}
                 />
               </FieldGroup>
+              
               <div className="my-5">
-                <Button
-                  type="submit"
-                  form="course-edit-form"
-                  disabled={form.formState.isSubmitting}
+                <Button 
+                  type="submit" 
+                  disabled={form.formState.isSubmitting || !course}
                 >
                   {form.formState.isSubmitting && <Spinner />}
-                  Update
+                  Update Course
                 </Button>
               </div>
             </form>
-          </Card>
-        </div>
+          )}
+        </ReusableEditCard>
       </div>
     </DashboardLayout>
   );

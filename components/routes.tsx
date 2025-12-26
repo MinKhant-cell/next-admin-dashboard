@@ -1,19 +1,7 @@
 // Auth Imports
 import {
   HiOutlineHome,
-  HiOutlineCpuChip,
-  HiOutlineUsers,
-  HiOutlineUser,
-  HiOutlineCog8Tooth,
-  HiOutlineCreditCard,
-  HiOutlineDocumentText,
-  HiOutlineCurrencyDollar,
-  HiOutlineUserCircle,
   HiOutlineUserPlus,
-  HiOutlineBuildingOffice,
-  HiOutlineBookOpen,
-  HiCalendar,
-  HiOutlineCalendar
 } from 'react-icons/hi2';
 
 import { UsersRound, Notebook, BookOpenText, Blocks, Calendar } from 'lucide-react';
@@ -23,7 +11,7 @@ export const routes: any = [
     name: 'Dashboard',
     path: '/dashboard/main',
     icon: <HiOutlineHome className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
-    collapse: false
+    collapse: false,
   },
   {
     name: 'Classrooms List',
@@ -43,16 +31,16 @@ export const routes: any = [
     icon: <Notebook className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
-  //  {
-  //   name: 'Students List',
-  //   path: '/dashboard/students',
-  //   icon: <HiOutlineUserPlus className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
-  //   collapse: false
-  // },
    {
     name: 'Teachers List',
     path: '/dashboard/teachers',
     icon: <UsersRound className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
+    collapse: false
+  },
+  {
+    name: 'Students List',
+    path: '/dashboard/students',
+    icon: <HiOutlineUserPlus className="-mt-[7px] h-4 w-4 stroke-2 text-inherit" />,
     collapse: false
   },
   {

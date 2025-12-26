@@ -57,13 +57,14 @@ export const createTeacher = async(teacher: any) => {
   return result;
 }
 
-export const updateTeacher = async(id: string | number, student: any) => {
-  const result = await TeacherAPI.update(id,student);
-  mutate(`/teachers/${id}`);
+export const updateTeacher = async (id: string | number, teacher: any) => {
+  const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+  const result = await TeacherAPI.update(numericId, teacher);
+  await mutate(`/teachers`);
   return result;
-}
+};
 
-export const deletTeacher = async(id: string | number) => {
+export const deleteTeacher = async(id: string | number) => {
   const result = await TeacherAPI.remove(id);;
   return result;
 }

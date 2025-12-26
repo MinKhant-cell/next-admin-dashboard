@@ -54,15 +54,24 @@ export default function CoursesPage() {
   }, [debouncedSearch]);
 
   const handleCoursesDelete = async (id: number) => {
-    const { status, message, error } = await deleteCourse(id);
-    if (!error && status == 204) {
-      if (filter.search) fetchParams.append('search', filter.search);
-      mutate(`/courses?${fetchParams.toString()}`);
-      toast.success(message);
-    } else {
-      toast.error(message);
+    try {
+      const response = await deleteCourse(id); 
+      
+      if (response.ok) {
+        if (filter.search) fetchParams.append('search', filter.search);
+        mutate(`/courses?${fetchParams.toString()}`);
+        toast.success('Course deleted successfully!');
+      } else {
+        const errorData = await response.json();
+        console.error('❌ Delete error:', errorData);
+        toast.error(errorData.message || 'Delete failed');
+      }
+    } catch (error) {
+      console.error('❌ Delete error:', error);
+      toast.error('Delete Failed');
     }
   };
+  
 
   return (
     <DashboardLayout>

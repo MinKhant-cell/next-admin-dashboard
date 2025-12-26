@@ -3,11 +3,10 @@
 
 import DashboardLayout from '@/components/layout';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import React, { useEffect } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import { toast, Toaster } from 'sonner';
+import { Controller, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { ImageUploadInput } from '@/components/ui-components/ImageUploadInput';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,26 +20,16 @@ import {
   FieldLabel
 } from '@/components/ui/field';
 import { InputGroup, InputGroupTextarea } from '@/components/ui/input-group';
-import LinkBackButton from '@/components/ui-components/LinkBackButton';
-import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
-
+import { ReusableEditCard } from '@/components/ui-components/ReusableEditCard';
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(5, 'Name must be at least 5 characters.')
-    .max(32, 'Name must be at most 32 characters.'),
-  description: z
-    .string()
-    .min(10, 'Description must be at least 10 characters.')
-    .max(100, 'Description must be at most 100 characters.')
-    .optional(),
+  name: z.string().min(5, 'Name must be at least 5 characters.').max(32, 'Name must be at most 32 characters.'),
+  description: z.string().min(10, 'Description must be at least 10 characters.').max(100, 'Description must be at most 100 characters.').optional(),
   image: z.instanceof(File).nullable().optional()
 });
 
 export default function SubjectEditPage({ id }: any) {
   const { subject, isError, isLoading } = getSubjectById(id);
-
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,33 +51,42 @@ export default function SubjectEditPage({ id }: any) {
   }, [subject, form.reset]);
 
   async function onSubmit(subject: z.infer<typeof formSchema>) {
-    const { error, data, status } = await updateSubject(id, subject);
-    if (!error) {
+    console.log('📤 Updating subject:', subject);
+    
+    try {
+      const response = await updateSubject(id, subject);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Update error:', errorData);
+        toast.error(errorData.message || 'Update failed');
+        return;
+      }
+      
+      console.log('✅ Update success');
       toast.success('Subject Updated Successfully 🎉');
       form.reset();
       router.push('/dashboard/subjects');
-    } else {
-      toast.error('Something went wrong 😢');
+    } catch (error) {
+      console.error('❌ Update error:', error);
+      toast.error('Update Failed 😢');
     }
   }
+  
 
   return (
     <DashboardLayout>
-    <div className="h-full w-full flex flex-col gap-5">
-      
+      <Toaster position="top-right" />
       <div className="w-full">
-        <Card className="h-[80vh] w-full p-5 sm:overflow-auto">
-          <div className="flex items-center justify-between mb-6 pb-4 border-b">
-            <h1 className="text-gray-700 dark:text-zinc-200 font-bold text-xl">
-              Edit Subject
-            </h1>
-            <BreadCrumbs />
-          </div>
-          
-          {isLoading && <Spinner />}
-          
+        <ReusableEditCard
+          title="Subject"
+          backHref="/dashboard/subjects"
+          breadcrumbPath={`/dashboard/subjects/${id}`}
+          breadcrumbName={subject?.name}
+          isLoading={isLoading || isError}
+        >
           {!isLoading && !isError && (
-            <form id="subject-edit-form" onSubmit={form.handleSubmit(onSubmit)}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <FieldGroup>
                 <Controller
                   name="name"
@@ -147,7 +145,6 @@ export default function SubjectEditPage({ id }: any) {
               <div className="my-5">
                 <Button
                   type="submit"
-                  form="subject-edit-form"
                   disabled={form.formState.isSubmitting}
                 >
                   {form.formState.isSubmitting && <Spinner />}
@@ -156,10 +153,8 @@ export default function SubjectEditPage({ id }: any) {
               </div>
             </form>
           )}
-        </Card>
+        </ReusableEditCard>
       </div>
-    </div>
-  </DashboardLayout>
-  
+    </DashboardLayout>
   );
 }

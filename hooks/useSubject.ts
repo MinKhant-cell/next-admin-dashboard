@@ -48,7 +48,7 @@ export const getSubjectById = (id: string | number) => {
   };
 }
 
-export const creatSubject = async(subject: any) => {
+export const createSubject = async(subject: any) => {
   const result = await SubjectAPI.create(subject);
   mutate(`/subjects`);
   return result;

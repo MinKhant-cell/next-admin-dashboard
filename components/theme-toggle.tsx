@@ -8,22 +8,19 @@ export function ThemeToggle() {
   const isDark = theme === "dark";
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
+    <div
       aria-label="Toggle theme"
-      className={`
-        h-10 w-10
-        text-zinc-700 dark:text-zinc-200
+      className={`p-2 rounded cursor-pointer
+        text-zinc-700 dark:text-zinc-200 
         hover:bg-zinc-100 dark:hover:bg-zinc-800
       `}
       onClick={() => setTheme(isDark ? "light" : "dark")}
     >
       {isDark ? (
-        <Sun className="h-7 w-7"/>
+        <Sun width="20" height="20"/>
       ) : (
-        <Moon className="h-7 w-7" />
+        <Moon width="20" height="20" />
       )}
-    </Button>
+    </div>
   );
 }

@@ -6,15 +6,7 @@ export const ClassroomAPI = {
 
   getById: (id: number) => apiClient(`/classrooms/${id}`),
 
-  // create: (data: any) =>
-  //   apiClient("/classrooms", {
-  //     method: "POST",
-  //     body: data,
-  //   }),
-
     create: async (data: any) => {
-      // PROOF LOG - BE MUST SEE THIS
-      console.log(' FE sending FormData:');
       for (let [key, value] of data.entries()) {
         console.log(`${key}:`, value);
       }
@@ -32,7 +24,10 @@ export const ClassroomAPI = {
   update: (id: string | number, data: any) =>
     apiClient(`/classrooms/${id}`, {
       method: "PATCH",
-      body: data,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data), 
     }),
 
   remove: (id: string | number) =>

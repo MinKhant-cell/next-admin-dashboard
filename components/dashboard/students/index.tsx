@@ -54,19 +54,30 @@ export default function StudentsPage() {
   }, [debouncedSearch]);
 
   const handleStudentsDelete = async (id: number) => {
-    const { status, message, error } = await deleteStudent(id);
-    if (!error && status == 204) {
-      const params = new URLSearchParams({
-        page: String(pagination.pageIndex + 1),
-        limit: String(pagination.pageSize)
-      });
-      if (filter.search) params.append('search', filter.search);
-      mutate(`/students?${params.toString()}`);
-      toast.success(message);
-    } else {
-      toast.error(message);
+    try {
+      const response = await deleteStudent(id); 
+      
+      if (response.ok) {
+       
+        const params = new URLSearchParams({
+          page: String(pagination.pageIndex + 1),
+          limit: String(pagination.pageSize)
+        });
+        if (filter.search) params.append('search', filter.search);
+        mutate(`/students?${params.toString()}`);
+        toast.success('Student deleted successfully!');
+      } else {
+       
+        const errorData = await response.json();
+        console.error('❌ Delete error:', errorData);
+        toast.error(errorData.message || 'Delete failed');
+      }
+    } catch (error) {
+      console.error('❌ Delete error:', error);
+      toast.error('Delete Failed');
     }
   };
+  
 
   return (
     <DashboardLayout>
@@ -142,17 +153,20 @@ export default function StudentsPage() {
           </div>
         </div>
         <div className="w-full rounded-lg ">
-          {isLoading ? (
-            <TableSkeletons />
-          ) : (
-            <StudentsTable
-              students={students.data}
-              totalCount={students.meta.total || 0}
-              pagination={pagination}
-              onPaginationChange={setPagination}
-              onDelete={handleStudentsDelete}
-            />
-          )}
+        {isLoading ? (
+              <TableSkeletons />
+            ) : students ? (  
+              <StudentsTable
+                students={students.data || []}
+                totalCount={students.meta?.total || 0}
+                pagination={pagination}
+                onPaginationChange={setPagination}
+                onDelete={handleStudentsDelete}
+              />
+            ) : (
+              <div>No students data available</div>  
+            )}
+
         </div>
       </div>
     </DashboardLayout>

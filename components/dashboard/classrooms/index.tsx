@@ -17,7 +17,6 @@ import {
 } from '@/components/ui/input-group';
 import { Search, Filter, FolderDown } from 'lucide-react';
 import { mutate } from 'swr';
-import { deleteCourse } from '@/hooks/useCourses';
 import { deleteClassroom, getClassrooms } from '@/hooks/useClassrooms';
 
 export default function ClassroomsPage() {
@@ -44,15 +43,26 @@ export default function ClassroomsPage() {
   }, [debouncedSearch]);
 
   const handleClassroomDelete = async (id: number) => {
-    const { status, message, error } = await deleteClassroom(id);
-    if (!error && status == 204) {
-      if (filter.search) fetchParams.append('search', filter.search);
-      mutate(`/classrooms?${fetchParams.toString()}`);
-      toast.success(message);
-    } else {
-      toast.error(message);
+    try {
+      const response = await deleteClassroom(id); // ✅ Response object
+      
+      if (response.ok) {
+        // 204 No Content = success (no body)
+        if (filter.search) fetchParams.append('search', filter.search);
+        mutate(`/classrooms?${fetchParams.toString()}`);
+        toast.success('Classroom deleted successfully!');
+      } else {
+        // Error response - parse JSON
+        const errorData = await response.json();
+        console.error('❌ Delete error:', errorData);
+        toast.error(errorData.message || 'Delete failed');
+      }
+    } catch (error) {
+      console.error('❌ Delete error:', error);
+      toast.error('Delete Failed');
     }
   };
+  
 
   return (
     <DashboardLayout>

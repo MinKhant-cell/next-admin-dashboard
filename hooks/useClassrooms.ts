@@ -52,11 +52,14 @@ export const createClassroom = async(classroom: any) => {
   return result;
 }
 
-export const updateClassroom = async(id: string | number, student: any) => {
-  const result = await ClassroomAPI.update(id,student);
-  mutate(`/classrooms/${id}`);
+
+export const updateClassroom = async (id: string | number, classroom: any) => {
+  const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+  const result = await ClassroomAPI.update(numericId, classroom);
+  await mutate(`/classrooms`);
   return result;
-}
+};
+
 
 export const deleteClassroom = async(id: string | number) => {
   const result = await ClassroomAPI.remove(id);;

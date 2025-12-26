@@ -15,7 +15,10 @@ export const TeacherAPI = {
   update: (id: string | number, data: any) =>
     apiClient(`/teachers/${id}`, {
       method: "PATCH",
-      body: data,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),  
     }),
 
   remove: (id: string | number) =>

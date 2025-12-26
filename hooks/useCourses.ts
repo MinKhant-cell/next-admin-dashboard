@@ -44,11 +44,12 @@ export const createCourse = async(student: any) => {
   return result;
 }
 
-export const updateCourse = async(id: string | number, student: any) => {
-  const result = await CourseAPI.update(id,student);
-  mutate(`/courses/${id}`);
+export const updateCourse = async (id: string | number, course: any) => {
+  const numericId = typeof id === 'string' ? parseInt(id, 10) : id;
+  const result = await CourseAPI.update(numericId, course);
+  await mutate(`/courses`);
   return result;
-}
+};
 
 export const deleteCourse = async(id: number) => {
   const result = await CourseAPI.remove(id);;

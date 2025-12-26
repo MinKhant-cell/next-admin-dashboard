@@ -172,14 +172,24 @@ function StudentTable(props) {
           Created At
         </p>
       ),
-      cell: (info: any) => (
-        <div className="flex justify-end w-full items-center gap-[14px]">
-          <p className="text-xs font-medium text-zinc-950 dark:text-white">
-            {format(new Date(info.getValue()), 'yyyy-MM-dd HH:mm')}
-          </p>
-        </div>
-      )
+      cell: (info: any) => {
+        const dateValue = info.getValue();
+        
+  
+        const formattedDate = dateValue 
+          ? format(new Date(dateValue), 'yyyy-MM-dd HH:mm')
+          : 'N/A';
+          
+        return (
+          <div className="flex justify-end w-full items-center gap-[14px]">
+            <p className="text-xs font-medium text-zinc-950 dark:text-white">
+              {formattedDate}
+            </p>
+          </div>
+        );
+      }
     }),
+    
 
     columnHelper.accessor('menu', {
       id: 'menu',

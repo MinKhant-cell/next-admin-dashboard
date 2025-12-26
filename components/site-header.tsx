@@ -1,46 +1,69 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { AvatarContainer } from './ui-components/AvatarContainer';
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { Moon, Sun } from 'lucide-react';
-import { ChevronRight } from 'lucide-react';
 import { CustomTrigger } from './custom-trigger';
 import { ThemeToggle } from './theme-toggle';
 
-export function SiteHeader() {
-  const { theme, setTheme } = useTheme();
+import { useRouter } from 'next/navigation'; 
+import { logout, useAuthProfile } from '@/lib/api/auth';
 
+export function SiteHeader() {
+  const router = useRouter();
+  const { user } = useAuthProfile();
+  
+  const handleLogout = async () => {
+    await logout();
+    router.push('/signin'); 
+  };
+  
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 py-3 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
+    <header className="flex h-[var(--header-height)] shrink-0 items-center gap-2 py-3 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[var(--header-height)]">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-        <CustomTrigger/>
+        <CustomTrigger />
+
         <Separator
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">Documents</h1>
+
+        {user ? (
+          <>
+            <Link href="/dashboard/settings">
+              <AvatarContainer
+                src="https://github.com/evilrabbit.png"
+                name="Admin"
+              />
+            </Link>
+            <h1 className="text-base font-medium">
+              Welcome, {user.username}
+            </h1>
+          </>
+        ) : (
+          <h1 className="text-base font-medium">Documents</h1>
+        )}
+
         <div className="ml-auto flex items-center gap-2">
-        <ThemeToggle/>
-          <Link href={'/dashboard/settings'}>
-            <AvatarContainer
-              src={'https://github.com/evilrabbit.png'}
-              name={'Admin'}
-            />
-          </Link>
-          {/* <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-            <a
-              href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
-              rel="noopener noreferrer"
-              target="_blank"
-              className="dark:text-foreground"
+          <ThemeToggle />
+
+          <div className="cursor-pointer" onClick={handleLogout}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              GitHub
-            </a>
-          </Button> */}
+              <path d="m16 17 5-5-5-5" />
+              <path d="M21 12H9" />
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            </svg>
+          </div>
         </div>
       </div>
     </header>

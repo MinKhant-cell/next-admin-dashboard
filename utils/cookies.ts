@@ -1,39 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parse, serialize } from 'cookie';
 
-// Function to parse cookies from the request
+
 export function parseCookies(req: NextRequest) {
   const cookieHeader = req.headers.get('cookie');
   return cookieHeader ? parse(cookieHeader) : {};
 }
 
-// Function to set cookies in the response
-export function setCookie(
-  res: NextResponse,
-  name: string,
-  value: any,
-  options: any = {}
-) {
-  const stringValue =
-    typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value);
-
-  if (options.maxAge) {
-    options.expires = new Date(Date.now() + options.maxAge * 1000);
+export const getCookie = (name: string): string | null => {
+  if (typeof document === 'undefined') return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(';').shift() || null;
   }
+  return null;
+};
 
-  res.cookies.set(name, stringValue, options);
-}
+export const setCookie = (name: string, value: string, days: number = 7) => {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Strict`;
+};
 
-// Function to get a specific cookie
-export function getCookie(req: NextRequest, name: string) {
-  const cookies = parseCookies(req);
-  const value = cookies[name];
-  if (value && value.startsWith('j:')) {
-    try {
-      return JSON.parse(value.slice(2));
-    } catch (e) {
-      return null;
-    }
-  }
-  return value;
-}
+export const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Strict`;
+};

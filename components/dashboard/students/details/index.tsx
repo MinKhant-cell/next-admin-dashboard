@@ -7,9 +7,7 @@ import { toast, Toaster } from 'sonner';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getStudentById } from '@/hooks/useStudents';
-import { Separator } from '@/components/ui/separator';
-import LinkBackButton from '@/components/ui-components/LinkBackButton';
-import { BreadCrumbs } from '@/components/ui-components/BreadCrumbs';
+import { ReusableDetailCard } from '@/components/ui-components/ReusableDetailCard';
 interface Props {
   
   id: string | number;
@@ -58,36 +56,31 @@ export default function StudentDetailsPage(props: Props) {
   );
   return (
     <DashboardLayout>
-    <div className="flex gap-5">
-    {/* <LinkBackButton href="/dashboard/students" /> */}
-    <Card className={'h-full py-3 w-full sm:overflow-auto'}>
-    <div className="px-5 py-3 h-16 flex items-center justify-between">
-    <h1 className="text-gray-700 dark:text-gray-300 font-medium text-lg">
-    Student Information
-    </h1>
-    <div className="ml-auto">
-    <BreadCrumbs />
-    </div>
-    </div>
-    <Separator />
-    
-    <div className="px-5">
+    <div className="w-full">
+    <ReusableDetailCard
+    title="Student"
+    backHref="/dashboard/students"
+    breadcrumbPath={`/dashboard/students/${id}`}
+    breadcrumbName={student?.name} 
+    isLoading={isLoading || isError}
+    >
     {isLoading ? (
-      <p>Loading ...</p>
+      <p className="text-center py-8 text-gray-500">Loading ...</p>
+    ) : isError ? (
+      <p className="text-center py-8 text-red-500">Failed to load student data</p>
     ) : (
       <div>
       {renderRow('Name', student.name)}
       {renderRow('Email', student.email)}
       {renderRow('Phone', student.phone)}
       {renderRow('Gender', student.gender)}
-      {renderRow('Country', student.country)}
       {renderRow('Status', student.status)}
       {renderRow('Created At', student.createdAt)}
       </div>
     )}
+    </ReusableDetailCard>
     </div>
-    </Card>
-    </div>
+    
     </DashboardLayout>
   );
 }

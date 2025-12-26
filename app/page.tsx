@@ -1,15 +1,15 @@
-import { redirect } from 'next/navigation';
+'use client';
 
-export default async function Dashboard() {
-  // const supabase = createClient();
-  // const [user] = await Promise.all([getUser(supabase)]);
-
-  // if (!user) {
-  //   return redirect('/dashboard/signin');
-  // } else {
-  //   redirect('/dashboard/main');
-  // }
+import ProtectedRoute from "@/components/protected-routes";
 
 
-  redirect('/dashboard/main');
+
+export default function Dashboard() {
+  return (
+    <ProtectedRoute>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-xl">Loading dashboard...</div>
+      </div>
+    </ProtectedRoute>
+  );
 }

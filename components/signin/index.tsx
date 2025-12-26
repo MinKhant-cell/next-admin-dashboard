@@ -14,6 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import Link from "next/link"
 
 export default function LoginForm({
   className,
@@ -43,12 +44,12 @@ export default function LoginForm({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel className="text-gray-600" htmlFor="password">Password</FieldLabel>
-                  <a
+                  <Link
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
                 <Input id="password" type="password" required />
               </Field>
